@@ -10,8 +10,8 @@ window.currentUser = currentUser;
 window.isProUser = isProUser;
 window.isAdminUser = isAdminUser;
 
-// API基础URL
-const API_BASE = 'https://resume-ai-project-production.up.railway.app/api';
+// API基础URL - 使用相对路径通过Vercel代理
+const API_BASE = '/api';
 
 // Admin账号配置
 const ADMIN_EMAIL = 'admin@resumemaster.com';
