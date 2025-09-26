@@ -1,14 +1,11 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
 const path = require('path');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-// 生成PDF简历
+// 生成PDF简历 - 临时返回HTML用于调试
 router.post('/generate-pdf', auth, async (req, res) => {
-  let browser;
-  
   try {
     const { resumeData, template = 'modern' } = req.body;
     
@@ -21,65 +18,86 @@ router.post('/generate-pdf', auth, async (req, res) => {
       template 
     });
     
-    // 启动浏览器
-    browser = await puppeteer.launch({
-      headless: 'new',
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--single-process',
-        '--disable-gpu',
-        '--disable-background-timer-throttling',
-        '--disable-backgrounding-occluded-windows',
-        '--disable-renderer-backgrounding',
-        '--disable-features=TranslateUI',
-        '--disable-ipc-flooding-protection',
-        '--disable-web-security',
-        '--disable-features=VizDisplayCompositor',
-        '--memory-pressure-off'
-      ],
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
-      timeout: 60000,
-      protocolTimeout: 60000
-    });
-    
-    const page = await browser.newPage();
-    
     // 生成HTML内容
     const htmlContent = generateResumeHTML(resumeData, template);
     
-    // 设置页面内容
-    await page.setContent(htmlContent, { 
-      waitUntil: 'networkidle0',
-      timeout: 30000 
-    });
+    // 临时方案：返回HTML让浏览器打印为PDF
+    // 设置响应头让浏览器知道这是要打印的内容
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Content-Disposition', 'inline');
     
-    // 生成PDF
-    const pdfBuffer = await page.pdf({
-      format: 'A4',
-      printBackground: true,
-      margin: {
-        top: '20mm',
-        right: '15mm',
-        bottom: '20mm',
-        left: '15mm'
-      }
-    });
+    // 添加打印样式和自动打印脚本
+    const printableHTML = `
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${resumeData.personalInfo.name} - 简历</title>
+    <style>
+        ${getTemplateStyles(template)}
+        
+        /* 打印专用样式 */
+        @media print {
+            body { margin: 0; }
+            .print-button { display: none !important; }
+            .resume-container { 
+                max-width: none; 
+                padding: 20px;
+                box-shadow: none;
+            }
+        }
+        
+        /* 屏幕显示样式 */
+        @media screen {
+            body { 
+                background: #f5f5f5; 
+                padding: 20px;
+            }
+            .resume-container {
+                background: white;
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                border-radius: 8px;
+            }
+            .print-button {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #3b82f6;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 16px;
+                z-index: 1000;
+                box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+            }
+            .print-button:hover {
+                background: #2563eb;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button" onclick="window.print()">🖨️ 打印/保存为PDF</button>
+    ${htmlContent.match(/<body[^>]*>([\s\S]*)<\/body>/i)[1]}
     
-    console.log('PDF生成成功，大小:', pdfBuffer.length, 'bytes');
+    <script>
+        // 页面加载完成后自动弹出打印对话框
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                if (confirm('是否立即打印/保存为PDF？')) {
+                    window.print();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>`;
     
-    // 设置响应头 - 使用URL编码处理中文文件名
-    const fileName = encodeURIComponent(`${resumeData.personalInfo.name}_简历.pdf`);
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${fileName}`);
-    res.setHeader('Content-Length', pdfBuffer.length);
-    
-    // 发送PDF
-    res.send(pdfBuffer);
+    console.log('HTML简历生成成功');
+    res.send(printableHTML);
     
   } catch (error) {
     console.error('PDF生成错误:', error);
@@ -88,10 +106,6 @@ router.post('/generate-pdf', auth, async (req, res) => {
       message: error.message,
       details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
-  } finally {
-    if (browser) {
-      await browser.close();
-    }
   }
 });
 

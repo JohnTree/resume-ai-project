@@ -15,8 +15,8 @@ const pdfRoutes = require('./routes/pdf');
 const app = express();
 const PORT = process.env.PORT || process.env.RAILWAY_STATIC_PORT || 3001;
 
-// 信任代理设置 - Railway使用代理
-app.set('trust proxy', true);
+// 信任代理设置 - Railway使用代理，但限制为Railway的代理
+app.set('trust proxy', 1);
 
 // 安全中间件 - 配置CSP允许内联脚本和事件处理器用于调试
 app.use(helmet({
@@ -34,10 +34,17 @@ app.use(helmet({
 }));
 app.use(compression());
 
-// 限流中间件
+// 限流中间件 - 配置为与trust proxy兼容
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15分钟
-  max: 100 // 限制每个IP 15分钟内最多100个请求
+  max: 100, // 限制每个IP 15分钟内最多100个请求
+  standardHeaders: true,
+  legacyHeaders: false,
+  // 跳过信任的代理
+  skip: (req) => {
+    // 如果是来自Railway内部的健康检查，跳过限流
+    return req.headers['user-agent']?.includes('Railway');
+  }
 });
 app.use(limiter);
 
