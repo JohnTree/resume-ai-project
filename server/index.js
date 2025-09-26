@@ -110,11 +110,28 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 简历大师服务器启动成功！`);
   console.log(`📡 服务地址: http://0.0.0.0:${PORT}`);
   console.log(`🌍 环境: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔧 端口: ${PORT}`);
+});
+
+// 优雅关闭处理
+process.on('SIGTERM', () => {
+  console.log('收到SIGTERM信号，正在优雅关闭服务器...');
+  server.close(() => {
+    console.log('服务器已关闭');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('收到SIGINT信号，正在优雅关闭服务器...');
+  server.close(() => {
+    console.log('服务器已关闭');
+    process.exit(0);
+  });
 });
 
 module.exports = app;
