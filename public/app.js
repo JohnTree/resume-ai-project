@@ -1423,18 +1423,27 @@ async function optimizeContent(type) {
     
     let content = '';
     let targetElement = '';
+    let optimizeButton = null;
     
     if (type === 'summary') {
         content = document.getElementById('summary').value;
         targetElement = 'summary';
+        optimizeButton = document.querySelector('button[onclick="optimizeContent(\'summary\')"]');
     } else if (type === 'skills') {
         content = document.getElementById('skills').value;
         targetElement = 'skills';
+        optimizeButton = document.querySelector('button[onclick="optimizeContent(\'skills\')"]');
     }
     
     if (!content.trim()) {
         alert('请先输入内容再进行AI优化');
         return;
+    }
+    
+    // 显示loading状态
+    if (optimizeButton) {
+        optimizeButton.disabled = true;
+        optimizeButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI优化中...';
     }
     
     try {
@@ -1471,6 +1480,12 @@ async function optimizeContent(type) {
         }
     } catch (error) {
         alert(`网络错误：${error.message}`);
+    } finally {
+        // 恢复按钮状态
+        if (optimizeButton) {
+            optimizeButton.disabled = false;
+            optimizeButton.innerHTML = '<i class="fas fa-magic"></i> AI智能优化';
+        }
     }
 }
 
@@ -1488,6 +1503,11 @@ async function optimizeExperience(button) {
         alert('请先输入工作描述再进行AI优化');
         return;
     }
+    
+    // 显示loading状态
+    const originalButtonContent = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI优化中...';
     
     try {
         const response = await fetch('/api/ai/optimize', {
@@ -1517,6 +1537,10 @@ async function optimizeExperience(button) {
         }
     } catch (error) {
         alert(`网络错误：${error.message}`);
+    } finally {
+        // 恢复按钮状态
+        button.disabled = false;
+        button.innerHTML = originalButtonContent;
     }
 }
 
