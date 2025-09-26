@@ -43,9 +43,28 @@ class AuthManager {
         window.isAdminUser = isAdminUser;
         window.isProUser = isProUser;
         
-        document.getElementById('loginBtn').style.display = 'none';
-        document.getElementById('userInfo').style.display = 'flex';
-        document.getElementById('userName').textContent = user.name;
+        // 安全地设置认证状态UI
+        const loginBtn = document.getElementById('loginBtn');
+        const userInfo = document.getElementById('userInfo');
+        const userName = document.getElementById('userName');
+        
+        if (loginBtn) {
+            loginBtn.style.display = 'none';
+        } else {
+            console.warn('loginBtn元素未找到');
+        }
+        
+        if (userInfo) {
+            userInfo.style.display = 'flex';
+        } else {
+            console.warn('userInfo元素未找到');
+        }
+        
+        if (userName) {
+            userName.textContent = user.name;
+        } else {
+            console.warn('userName元素未找到');
+        }
         
         // 显示"我的简历"链接
         const resumeListLink = document.getElementById('resumeListLink');
@@ -83,8 +102,22 @@ class AuthManager {
         window.isAdminUser = isAdminUser;
         window.isProUser = isProUser;
         
-        document.getElementById('loginBtn').style.display = 'inline-flex';
-        document.getElementById('userInfo').style.display = 'none';
+        // 安全地设置登录按钮显示
+        const loginBtn = document.getElementById('loginBtn');
+        const userInfo = document.getElementById('userInfo');
+        
+        if (loginBtn) {
+            loginBtn.style.display = 'inline-flex';
+            console.log('登录按钮已显示');
+        } else {
+            console.warn('loginBtn元素未找到，请检查HTML结构');
+        }
+        
+        if (userInfo) {
+            userInfo.style.display = 'none';
+        } else {
+            console.warn('userInfo元素未找到');
+        }
         
         // 隐藏"我的简历"链接
         const resumeListLink = document.getElementById('resumeListLink');
@@ -1893,10 +1926,33 @@ function startPayment() {
 
 // 重写模板选择函数，添加付费墙检查
 function selectTemplate(templateId) {
-    if (!paywallManager.canUseTemplate(templateId)) {
-        paywallManager.showTemplatePaywall();
-        return;
+    console.log('selectTemplate called with:', templateId);
+    
+    try {
+        // 检查paywallManager是否存在
+        if (typeof paywallManager === 'undefined') {
+            console.error('paywallManager未定义');
+            // 直接切换模板，不检查付费墙
+            switchTemplate(templateId);
+            return;
+        }
+        
+        if (!paywallManager.canUseTemplate(templateId)) {
+            paywallManager.showTemplatePaywall();
+            return;
+        }
+        
+        switchTemplate(templateId);
+    } catch (error) {
+        console.error('selectTemplate error:', error);
+        // 出错时直接切换模板
+        switchTemplate(templateId);
     }
+}
+
+// 模板切换核心逻辑
+function switchTemplate(templateId) {
+    console.log('切换到模板:', templateId);
     
     currentTemplate = templateId;
     
@@ -1904,7 +1960,11 @@ function selectTemplate(templateId) {
     document.querySelectorAll('.template-card').forEach(card => {
         card.classList.remove('active');
     });
-    document.querySelector(`[data-template="${templateId}"]`).classList.add('active');
+    
+    const targetCard = document.querySelector(`[data-template="${templateId}"]`);
+    if (targetCard) {
+        targetCard.classList.add('active');
+    }
     
     // 重新渲染预览
     updatePreview();
