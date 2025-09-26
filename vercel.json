@@ -21,7 +21,7 @@
   "routes": [
     {
       "src": "/",
-      "dest": "/demo.html"
+      "dest": "/public/index.html"
     },
     {
       "src": "/editor",
@@ -34,6 +34,10 @@
     {
       "src": "/debug",
       "dest": "/public/debug.html"
+    },
+    {
+      "src": "/status",
+      "dest": "/demo.html"
     },
     {
       "src": "/api/(.*)",
