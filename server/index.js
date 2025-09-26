@@ -55,7 +55,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('../public'));
 
 // 数据库连接
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/resumeai', {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
