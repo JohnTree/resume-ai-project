@@ -13,7 +13,7 @@ const aiRoutes = require('./routes/ai');
 const pdfRoutes = require('./routes/pdf');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || process.env.RAILWAY_STATIC_PORT || 3001;
 
 // 安全中间件 - 配置CSP允许内联脚本和事件处理器用于调试
 app.use(helmet({
@@ -92,10 +92,11 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 简历大师服务器启动成功！`);
-  console.log(`📡 服务地址: http://localhost:${PORT}`);
+  console.log(`📡 服务地址: http://0.0.0.0:${PORT}`);
   console.log(`🌍 环境: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔧 端口: ${PORT}`);
 });
 
 module.exports = app;
