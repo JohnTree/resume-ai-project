@@ -15,6 +15,9 @@ const pdfRoutes = require('./routes/pdf');
 const app = express();
 const PORT = process.env.PORT || process.env.RAILWAY_STATIC_PORT || 3001;
 
+// 信任代理设置 - Railway使用代理
+app.set('trust proxy', true);
+
 // 安全中间件 - 配置CSP允许内联脚本和事件处理器用于调试
 app.use(helmet({
   contentSecurityPolicy: {
