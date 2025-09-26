@@ -12,7 +12,7 @@ RUN npm install
 COPY server/ ./
 
 # 暴露端口
-EXPOSE 3001
+EXPOSE 8080
 
 # 启动应用
 CMD ["npm", "start"]
