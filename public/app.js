@@ -1566,7 +1566,20 @@ async function generatePDF() {
         return;
     }
     
+    if (!authManager.token) {
+        alert('请先登录后再生成PDF');
+        return;
+    }
+    
     // 显示加载状态
+    const pdfButton = document.querySelector('button[onclick="generatePDF()"]');
+    const originalButtonContent = pdfButton ? pdfButton.innerHTML : '';
+    
+    if (pdfButton) {
+        pdfButton.disabled = true;
+        pdfButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成PDF中...';
+    }
+    
     const loadingElement = document.getElementById('loading');
     if (loadingElement) {
         loadingElement.style.display = 'block';
@@ -1576,11 +1589,11 @@ async function generatePDF() {
         // 收集简历数据
         const resumeData = collectResumeData();
         
-        const response = await fetch(`${API_BASE}/pdf/generate-pdf`, {
+        const response = await fetch('/api/pdf/generate-pdf', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`
+                'Authorization': `Bearer ${authManager.token}`
             },
             body: JSON.stringify({
                 resumeData: resumeData,
@@ -1612,6 +1625,12 @@ async function generatePDF() {
         const loadingElement = document.getElementById('loading');
         if (loadingElement) {
             loadingElement.style.display = 'none';
+        }
+        
+        // 恢复按钮状态
+        if (pdfButton) {
+            pdfButton.disabled = false;
+            pdfButton.innerHTML = originalButtonContent || '<i class="fas fa-download"></i> 下载PDF';
         }
     }
 }
