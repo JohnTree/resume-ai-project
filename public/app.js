@@ -2005,21 +2005,42 @@ async function generatePDF() {
         });
 
         if (response.ok) {
-            const result = await response.json();
-            if (result.success && result.html) {
-                // 在新窗口中打开HTML简历
+            // 先检查响应的Content-Type
+            const contentType = response.headers.get('content-type');
+            console.log('响应Content-Type:', contentType);
+            
+            if (contentType && contentType.includes('application/json')) {
+                const result = await response.json();
+                if (result.success && result.html) {
+                    // 在新窗口中打开HTML简历
+                    const newWindow = window.open('', '_blank');
+                    newWindow.document.write(result.html);
+                    newWindow.document.close();
+                    
+                    paywallManager.incrementPdfCount();
+                    alert('简历已在新窗口中打开，您可以使用浏览器的打印功能保存为PDF！');
+                } else {
+                    alert('PDF生成失败：响应格式错误');
+                }
+            } else {
+                // 如果不是JSON，可能是HTML，直接在新窗口打开
+                const htmlContent = await response.text();
                 const newWindow = window.open('', '_blank');
-                newWindow.document.write(result.html);
+                newWindow.document.write(htmlContent);
                 newWindow.document.close();
                 
                 paywallManager.incrementPdfCount();
                 alert('简历已在新窗口中打开，您可以使用浏览器的打印功能保存为PDF！');
-            } else {
-                alert('PDF生成失败：响应格式错误');
             }
         } else {
-            const error = await response.json();
-            alert(`PDF生成失败：${error.error || error.message}`);
+            try {
+                const error = await response.json();
+                alert(`PDF生成失败：${error.error || error.message}`);
+            } catch (e) {
+                const errorText = await response.text();
+                console.error('错误响应:', errorText);
+                alert(`PDF生成失败：服务器错误 (${response.status})`);
+            }
         }
     } catch (error) {
         console.error('PDF生成错误:', error);
