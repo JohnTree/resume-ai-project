@@ -243,7 +243,7 @@
             resultDiv.textContent = '正在测试用户注册...';
             
             try {
-                const response = await fetch('http://localhost:3000/api/auth/register', {
+                const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -289,7 +289,7 @@
             resultDiv.textContent = '🤖 AI正在分析和优化您的简历内容...';
             
             try {
-                const response = await fetch('http://localhost:3000/api/ai/optimize', {
+                const response = await fetch('/api/ai/optimize', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -319,7 +319,7 @@
         // 页面加载时检查服务器状态
         window.onload = async function() {
             try {
-                const response = await fetch('http://localhost:3000/api/auth/register', {
+                const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: 'test', password: 'test' })
