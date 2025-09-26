@@ -36,10 +36,6 @@
       "dest": "/public/debug.html"
     },
     {
-      "src": "/status",
-      "dest": "/demo.html"
-    },
-    {
       "src": "/api/(.*)",
       "dest": "https://resume-ai-project-production.up.railway.app/api/$1"
     },
