@@ -76,6 +76,7 @@ app.get('/', (req, res) => {
     status: 'running',
     version: '1.0.0',
     timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
     endpoints: {
       health: '/health',
       auth: '/api/auth',
@@ -92,8 +93,15 @@ app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
-    version: '1.0.0'
+    version: '1.0.0',
+    uptime: process.uptime(),
+    memory: process.memoryUsage()
   });
+});
+
+// Railway健康检查
+app.get('/healthz', (req, res) => {
+  res.status(200).send('OK');
 });
 
 // 404 处理
