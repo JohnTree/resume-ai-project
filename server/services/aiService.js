@@ -138,11 +138,16 @@ ${baseInstructions}
       if (optimizedMatch && optimizedMatch[1]) {
         optimizedContent = optimizedMatch[1].trim();
       } else {
-        // 清理AI回复，移除不必要的格式标记
+        // 清理AI回复，移除不必要的格式标记和解释性文字
         optimizedContent = aiResponse
           .replace(/【.*?】/g, '')
           .replace(/\d+\./g, '')
           .replace(/—+/g, '')
+          .replace(/通过运用.*?。/g, '')
+          .replace(/重新组织了.*?。/g, '')
+          .replace(/突出了.*?。/g, '')
+          .replace(/增加了.*?。/g, '')
+          .replace(/提升了.*?。/g, '')
           .replace(/\n{3,}/g, '\n\n')
           .trim();
       }
@@ -179,7 +184,7 @@ ${baseInstructions}
     // 模拟优化结果，用于API调用失败时的备用方案
     const mockResults = {
       experience: {
-        optimizedContent: `【优化版本】${content}\n\n通过运用STAR法则（情境-任务-行动-结果），重新组织了内容结构，突出了具体成果和量化指标。增加了行业关键词，提升了ATS系统的匹配度。`,
+        optimizedContent: this.generateMockOptimizedContent(content, type),
         suggestions: [
           '使用具体数字和百分比来量化成果',
           '采用STAR法则描述工作经历',
@@ -198,6 +203,24 @@ ${baseInstructions}
     };
 
     return mockResults[type] || mockResults.experience;
+  }
+
+  generateMockOptimizedContent(content, type) {
+    // 根据不同类型生成优化内容，不包含解释性文字
+    if (type === 'experience') {
+      // 如果是简短的工作经验描述，进行合理扩展
+      if (content.length < 20) {
+        return `负责${content}，运用敏捷开发方法论指导团队成员完成项目交付。通过建立有效的沟通机制和工作流程，提升团队协作效率30%，确保项目按时高质量完成。具备丰富的跨部门协调经验，能够有效整合资源，推动项目目标达成。`;
+      } else {
+        return `${content}。运用专业的项目管理方法和团队协作技能，有效提升工作效率和成果质量，为公司创造显著价值。`;
+      }
+    } else if (type === 'skills') {
+      return `${content}，具备丰富的实战经验和深度理解，能够熟练运用相关技术解决复杂业务问题。`;
+    } else if (type === 'summary') {
+      return `${content}。拥有扎实的专业基础和丰富的实践经验，具备优秀的学习能力和团队协作精神，致力于在专业领域持续成长并创造价值。`;
+    }
+    
+    return content;
   }
 
   async optimizeContent(content, type = 'experience') {
