@@ -1992,7 +1992,7 @@ async function generatePDF() {
             return;
         }
         
-        const response = await fetch(`${API_BASE}/pdf/generate-pdf`, {
+        const response = await fetch('/api/pdf/generate-pdf', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
