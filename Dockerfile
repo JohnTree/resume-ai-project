@@ -2,14 +2,14 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# 复制package.json文件
-COPY package*.json ./
+# 复制server目录的package.json文件
+COPY server/package*.json ./
 
 # 安装依赖
 RUN npm install
 
-# 复制应用代码
-COPY . ./
+# 复制server目录的应用代码
+COPY server/ ./
 
 # 暴露端口
 EXPOSE 3001
