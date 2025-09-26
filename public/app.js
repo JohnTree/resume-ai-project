@@ -10,8 +10,8 @@ window.currentUser = currentUser;
 window.isProUser = isProUser;
 window.isAdminUser = isAdminUser;
 
-// API基础URL - 使用相对路径通过Vercel代理
-const API_BASE = '/api';
+// API基础URL
+const API_BASE = 'https://resume-ai-project-production.up.railway.app/api';
 
 // Admin账号配置
 const ADMIN_EMAIL = 'admin@resumemaster.com';
@@ -43,28 +43,9 @@ class AuthManager {
         window.isAdminUser = isAdminUser;
         window.isProUser = isProUser;
         
-        // 安全地设置认证状态UI
-        const loginBtn = document.getElementById('loginBtn');
-        const userInfo = document.getElementById('userInfo');
-        const userName = document.getElementById('userName');
-        
-        if (loginBtn) {
-            loginBtn.style.display = 'none';
-        } else {
-            console.warn('loginBtn元素未找到');
-        }
-        
-        if (userInfo) {
-            userInfo.style.display = 'flex';
-        } else {
-            console.warn('userInfo元素未找到');
-        }
-        
-        if (userName) {
-            userName.textContent = user.name;
-        } else {
-            console.warn('userName元素未找到');
-        }
+        document.getElementById('loginBtn').style.display = 'none';
+        document.getElementById('userInfo').style.display = 'flex';
+        document.getElementById('userName').textContent = user.name;
         
         // 显示"我的简历"链接
         const resumeListLink = document.getElementById('resumeListLink');
@@ -102,22 +83,8 @@ class AuthManager {
         window.isAdminUser = isAdminUser;
         window.isProUser = isProUser;
         
-        // 安全地设置登录按钮显示
-        const loginBtn = document.getElementById('loginBtn');
-        const userInfo = document.getElementById('userInfo');
-        
-        if (loginBtn) {
-            loginBtn.style.display = 'inline-flex';
-            console.log('登录按钮已显示');
-        } else {
-            console.warn('loginBtn元素未找到，请检查HTML结构');
-        }
-        
-        if (userInfo) {
-            userInfo.style.display = 'none';
-        } else {
-            console.warn('userInfo元素未找到');
-        }
+        document.getElementById('loginBtn').style.display = 'inline-flex';
+        document.getElementById('userInfo').style.display = 'none';
         
         // 隐藏"我的简历"链接
         const resumeListLink = document.getElementById('resumeListLink');
@@ -314,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
 async function autoRegister() {
     try {
         console.log('开始自动注册用户...');
-        const response = await fetch('http://localhost:3000/api/auth/register', {
+        const response = await fetch('/api/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1475,7 +1442,7 @@ async function optimizeContent(type) {
     }
     
     try {
-        const response = await fetch('http://localhost:3000/api/ai/optimize', {
+        const response = await fetch('/api/ai/optimize', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1527,7 +1494,7 @@ async function optimizeExperience(button) {
     }
     
     try {
-        const response = await fetch('http://localhost:3000/api/ai/optimize', {
+        const response = await fetch('/api/ai/optimize', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1926,33 +1893,10 @@ function startPayment() {
 
 // 重写模板选择函数，添加付费墙检查
 function selectTemplate(templateId) {
-    console.log('selectTemplate called with:', templateId);
-    
-    try {
-        // 检查paywallManager是否存在
-        if (typeof paywallManager === 'undefined') {
-            console.error('paywallManager未定义');
-            // 直接切换模板，不检查付费墙
-            switchTemplate(templateId);
-            return;
-        }
-        
-        if (!paywallManager.canUseTemplate(templateId)) {
-            paywallManager.showTemplatePaywall();
-            return;
-        }
-        
-        switchTemplate(templateId);
-    } catch (error) {
-        console.error('selectTemplate error:', error);
-        // 出错时直接切换模板
-        switchTemplate(templateId);
+    if (!paywallManager.canUseTemplate(templateId)) {
+        paywallManager.showTemplatePaywall();
+        return;
     }
-}
-
-// 模板切换核心逻辑
-function switchTemplate(templateId) {
-    console.log('切换到模板:', templateId);
     
     currentTemplate = templateId;
     
@@ -1960,11 +1904,7 @@ function switchTemplate(templateId) {
     document.querySelectorAll('.template-card').forEach(card => {
         card.classList.remove('active');
     });
-    
-    const targetCard = document.querySelector(`[data-template="${templateId}"]`);
-    if (targetCard) {
-        targetCard.classList.add('active');
-    }
+    document.querySelector(`[data-template="${templateId}"]`).classList.add('active');
     
     // 重新渲染预览
     updatePreview();
