@@ -1,10 +1,11 @@
 const express = require('express');
+const { jsPDF } = require('jspdf');
 const path = require('path');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-// 生成PDF简历 - 临时返回HTML用于调试
+// 生成PDF简历
 router.post('/generate-pdf', auth, async (req, res) => {
   try {
     const { resumeData, template = 'modern' } = req.body;
@@ -18,133 +19,168 @@ router.post('/generate-pdf', auth, async (req, res) => {
       template 
     });
     
-    // 生成HTML内容
-    const htmlContent = generateResumeHTML(resumeData, template);
-    
-    // 返回JSON响应，包含HTML内容，让前端在新窗口中打开
-    const printableHTML = `
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${resumeData.personalInfo.name} - 简历</title>
-    <style>
-        ${getTemplateStyles(template)}
-        
-        /* 打印专用样式 */
-        @media print {
-            body { margin: 0; }
-            .print-button { display: none !important; }
-            .resume-container { 
-                max-width: none; 
-                padding: 20px;
-                box-shadow: none;
-            }
-        }
-        
-        /* 屏幕显示样式 */
-        @media screen {
-            body { 
-                background: #f5f5f5; 
-                padding: 20px;
-            }
-            .resume-container {
-                background: white;
-                box-shadow: 0 0 20px rgba(0,0,0,0.1);
-                border-radius: 8px;
-            }
-            .print-button {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #3b82f6;
-                color: white;
-                border: none;
-                padding: 12px 24px;
-                border-radius: 6px;
-                cursor: pointer;
-                font-size: 16px;
-                z-index: 1000;
-                box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
-            }
-            .print-button:hover {
-                background: #2563eb;
-            }
-        }
-    </style>
-</head>
-<body>
-    <button class="print-button" onclick="printResume()">
-        🖨️ 打印/保存为PDF
-        <div style="font-size: 12px; margin-top: 4px; opacity: 0.9;">
-            Ctrl+P 或点击此按钮
-        </div>
-    </button>
-    ${htmlContent.match(/<body[^>]*>([\s\S]*)<\/body>/i)[1]}
-    
-    <script>
-        // 页面加载完成后显示保存指引
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                // 创建一个更友好的提示框
-                const modal = document.createElement('div');
-                modal.style.cssText = \`
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0,0,0,0.5);
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    z-index: 10000;
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                \`;
-                
-                modal.innerHTML = \`
-                    <div style="background: white; padding: 30px; border-radius: 12px; max-width: 500px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                        <h2 style="color: #1e293b; margin-bottom: 20px;">📄 简历已生成</h2>
-                        <p style="color: #64748b; margin-bottom: 25px; line-height: 1.6;">
-                            请按照以下步骤保存为PDF：<br><br>
-                            <strong>1.</strong> 点击下方"打印/保存PDF"按钮<br>
-                            <strong>2.</strong> 在打印对话框中选择"保存为PDF"<br>
-                            <strong>3.</strong> 选择保存位置并确认
-                        </p>
-                        <div style="display: flex; gap: 15px; justify-content: center;">
-                            <button onclick="window.print(); this.parentElement.parentElement.parentElement.remove();" 
-                                    style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px;">
-                                🖨️ 打印/保存PDF
-                            </button>
-                            <button onclick="this.parentElement.parentElement.parentElement.remove();" 
-                                    style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px;">
-                                稍后处理
-                            </button>
-                        </div>
-                    </div>
-                \`;
-                
-                document.body.appendChild(modal);
-            }, 500);
-        });
-        
-        // 优化打印按钮
-        function printResume() {
-            window.print();
-        }
-    </script>
-</body>
-</html>`;
-    
-    console.log('HTML简历生成成功');
-    
-    // 返回JSON格式，包含HTML内容
-    res.json({
-      success: true,
-      html: printableHTML,
-      fileName: `${resumeData.personalInfo.name}_简历`
+    // 创建PDF文档
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
     });
+    
+    // 设置字体（jsPDF默认不支持中文，需要特殊处理）
+    doc.setFont('helvetica');
+    
+    let yPosition = 20;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+    const contentWidth = pageWidth - 2 * margin;
+    
+    // 添加个人信息
+    const { personalInfo } = resumeData;
+    
+    // 姓名 - 大标题
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text(personalInfo.name || 'Name', margin, yPosition);
+    yPosition += 15;
+    
+    // 联系信息
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    if (personalInfo.email) {
+      doc.text(`Email: ${personalInfo.email}`, margin, yPosition);
+      yPosition += 8;
+    }
+    if (personalInfo.phone) {
+      doc.text(`Phone: ${personalInfo.phone}`, margin, yPosition);
+      yPosition += 8;
+    }
+    if (personalInfo.address) {
+      doc.text(`Address: ${personalInfo.address}`, margin, yPosition);
+      yPosition += 8;
+    }
+    
+    yPosition += 10;
+    
+    // 个人简介
+    if (resumeData.summary) {
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Summary', margin, yPosition);
+      yPosition += 10;
+      
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      const summaryLines = doc.splitTextToSize(resumeData.summary, contentWidth);
+      doc.text(summaryLines, margin, yPosition);
+      yPosition += summaryLines.length * 6 + 10;
+    }
+    
+    // 工作经验
+    if (resumeData.experience && resumeData.experience.length > 0) {
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Experience', margin, yPosition);
+      yPosition += 10;
+      
+      resumeData.experience.forEach(exp => {
+        // 检查是否需要新页面
+        if (yPosition > 250) {
+          doc.addPage();
+          yPosition = 20;
+        }
+        
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text(exp.position || 'Position', margin, yPosition);
+        yPosition += 6;
+        
+        doc.setFont('helvetica', 'normal');
+        doc.text(exp.company || 'Company', margin, yPosition);
+        yPosition += 6;
+        
+        if (exp.startDate || exp.endDate) {
+          const dateRange = `${formatDate(exp.startDate)} - ${exp.endDate ? formatDate(exp.endDate) : 'Present'}`;
+          doc.text(dateRange, margin, yPosition);
+          yPosition += 6;
+        }
+        
+        if (exp.description) {
+          doc.setFontSize(10);
+          const descLines = doc.splitTextToSize(exp.description, contentWidth);
+          doc.text(descLines, margin, yPosition);
+          yPosition += descLines.length * 5 + 8;
+        }
+        
+        yPosition += 5;
+      });
+    }
+    
+    // 教育背景
+    if (resumeData.education && resumeData.education.length > 0) {
+      // 检查是否需要新页面
+      if (yPosition > 220) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Education', margin, yPosition);
+      yPosition += 10;
+      
+      resumeData.education.forEach(edu => {
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${edu.degree || 'Degree'} ${edu.major || 'Major'}`, margin, yPosition);
+        yPosition += 6;
+        
+        doc.setFont('helvetica', 'normal');
+        doc.text(edu.school || 'School', margin, yPosition);
+        yPosition += 6;
+        
+        if (edu.startDate || edu.endDate) {
+          const dateRange = `${formatDate(edu.startDate)} - ${edu.endDate ? formatDate(edu.endDate) : 'Present'}`;
+          doc.text(dateRange, margin, yPosition);
+          yPosition += 6;
+        }
+        
+        yPosition += 5;
+      });
+    }
+    
+    // 专业技能
+    if (resumeData.skills && resumeData.skills.length > 0 && resumeData.skills[0].items) {
+      // 检查是否需要新页面
+      if (yPosition > 240) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Skills', margin, yPosition);
+      yPosition += 10;
+      
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      const skillsText = resumeData.skills[0].items.join(', ');
+      const skillsLines = doc.splitTextToSize(skillsText, contentWidth);
+      doc.text(skillsLines, margin, yPosition);
+    }
+    
+    // 生成PDF buffer
+    const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
+    
+    console.log('PDF生成成功，大小:', pdfBuffer.length, 'bytes');
+    
+    // 设置响应头
+    const fileName = encodeURIComponent(`${personalInfo.name}_简历.pdf`);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${fileName}`);
+    res.setHeader('Content-Length', pdfBuffer.length);
+    
+    // 发送PDF
+    res.send(pdfBuffer);
     
   } catch (error) {
     console.error('PDF生成错误:', error);

@@ -2005,11 +2005,26 @@ async function generatePDF() {
         });
 
         if (response.ok) {
-            // 先检查响应的Content-Type
+            // 检查响应的Content-Type
             const contentType = response.headers.get('content-type');
             console.log('响应Content-Type:', contentType);
             
-            if (contentType && contentType.includes('application/json')) {
+            if (contentType && contentType.includes('application/pdf')) {
+                // PDF文件，直接下载
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${name}_简历.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                paywallManager.incrementPdfCount();
+                alert('PDF下载成功！');
+            } else if (contentType && contentType.includes('application/json')) {
+                // JSON响应，可能是错误或HTML内容
                 const result = await response.json();
                 if (result.success && result.html) {
                     // 在新窗口中打开HTML简历
@@ -2023,7 +2038,7 @@ async function generatePDF() {
                     alert('PDF生成失败：响应格式错误');
                 }
             } else {
-                // 如果不是JSON，可能是HTML，直接在新窗口打开
+                // 其他格式，尝试作为HTML处理
                 const htmlContent = await response.text();
                 const newWindow = window.open('', '_blank');
                 newWindow.document.write(htmlContent);
