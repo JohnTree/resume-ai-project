@@ -4,7 +4,7 @@
   "description": "简历大师AI - 后端服务",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node railway-test.js",
     "dev": "nodemon index.js",
     "test": "jest",
     "prod": "node index.js"
