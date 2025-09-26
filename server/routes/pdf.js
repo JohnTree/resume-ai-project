@@ -75,18 +75,64 @@ router.post('/generate-pdf', auth, async (req, res) => {
     </style>
 </head>
 <body>
-    <button class="print-button" onclick="window.print()">🖨️ 打印/保存为PDF</button>
+    <button class="print-button" onclick="printResume()">
+        🖨️ 打印/保存为PDF
+        <div style="font-size: 12px; margin-top: 4px; opacity: 0.9;">
+            Ctrl+P 或点击此按钮
+        </div>
+    </button>
     ${htmlContent.match(/<body[^>]*>([\s\S]*)<\/body>/i)[1]}
     
     <script>
-        // 页面加载完成后自动弹出打印对话框
+        // 页面加载完成后显示保存指引
         window.addEventListener('load', function() {
             setTimeout(function() {
-                if (confirm('是否立即打印/保存为PDF？')) {
-                    window.print();
-                }
-            }, 1000);
+                // 创建一个更友好的提示框
+                const modal = document.createElement('div');
+                modal.style.cssText = \`
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.5);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 10000;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                \`;
+                
+                modal.innerHTML = \`
+                    <div style="background: white; padding: 30px; border-radius: 12px; max-width: 500px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                        <h2 style="color: #1e293b; margin-bottom: 20px;">📄 简历已生成</h2>
+                        <p style="color: #64748b; margin-bottom: 25px; line-height: 1.6;">
+                            请按照以下步骤保存为PDF：<br><br>
+                            <strong>1.</strong> 点击下方"打印/保存PDF"按钮<br>
+                            <strong>2.</strong> 在打印对话框中选择"保存为PDF"<br>
+                            <strong>3.</strong> 选择保存位置并确认
+                        </p>
+                        <div style="display: flex; gap: 15px; justify-content: center;">
+                            <button onclick="window.print(); this.parentElement.parentElement.parentElement.remove();" 
+                                    style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px;">
+                                🖨️ 打印/保存PDF
+                            </button>
+                            <button onclick="this.parentElement.parentElement.parentElement.remove();" 
+                                    style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px;">
+                                稍后处理
+                            </button>
+                        </div>
+                    </div>
+                \`;
+                
+                document.body.appendChild(modal);
+            }, 500);
         });
+        
+        // 优化打印按钮
+        function printResume() {
+            window.print();
+        }
     </script>
 </body>
 </html>`;
