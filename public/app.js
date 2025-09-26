@@ -2005,18 +2005,18 @@ async function generatePDF() {
         });
 
         if (response.ok) {
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${name}_简历.pdf`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-            
-            paywallManager.incrementPdfCount();
-            alert('PDF生成成功！');
+            const result = await response.json();
+            if (result.success && result.html) {
+                // 在新窗口中打开HTML简历
+                const newWindow = window.open('', '_blank');
+                newWindow.document.write(result.html);
+                newWindow.document.close();
+                
+                paywallManager.incrementPdfCount();
+                alert('简历已在新窗口中打开，您可以使用浏览器的打印功能保存为PDF！');
+            } else {
+                alert('PDF生成失败：响应格式错误');
+            }
         } else {
             const error = await response.json();
             alert(`PDF生成失败：${error.error || error.message}`);

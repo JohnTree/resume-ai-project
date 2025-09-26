@@ -21,12 +21,7 @@ router.post('/generate-pdf', auth, async (req, res) => {
     // 生成HTML内容
     const htmlContent = generateResumeHTML(resumeData, template);
     
-    // 临时方案：返回HTML让浏览器打印为PDF
-    // 设置响应头让浏览器知道这是要打印的内容
-    res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    res.setHeader('Content-Disposition', 'inline');
-    
-    // 添加打印样式和自动打印脚本
+    // 返回JSON响应，包含HTML内容，让前端在新窗口中打开
     const printableHTML = `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -97,7 +92,13 @@ router.post('/generate-pdf', auth, async (req, res) => {
 </html>`;
     
     console.log('HTML简历生成成功');
-    res.send(printableHTML);
+    
+    // 返回JSON格式，包含HTML内容
+    res.json({
+      success: true,
+      html: printableHTML,
+      fileName: `${resumeData.personalInfo.name}_简历`
+    });
     
   } catch (error) {
     console.error('PDF生成错误:', error);
