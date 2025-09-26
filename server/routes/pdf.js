@@ -5,7 +5,55 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
+// 获取模板颜色主题
+function getTemplateColors(template) {
+  const themes = {
+    modern: {
+      primary: { r: 59, g: 130, b: 246 },    // 蓝色
+      secondary: { r: 100, g: 116, b: 139 }, // 灰蓝
+      background: { r: 248, g: 250, b: 252 }, // 浅蓝灰
+      text: { r: 30, g: 41, b: 59 }          // 深色文字
+    },
+    classic: {
+      primary: { r: 52, g: 73, b: 94 },      // 深蓝灰
+      secondary: { r: 149, g: 165, b: 166 }, // 中灰
+      background: { r: 255, g: 255, b: 255 }, // 白色
+      text: { r: 44, g: 62, b: 80 }
+    },
+    creative: {
+      primary: { r: 139, g: 92, b: 246 },    // 紫色
+      secondary: { r: 168, g: 85, b: 247 },  // 亮紫
+      background: { r: 250, g: 245, b: 255 }, // 浅紫
+      text: { r: 44, g: 62, b: 80 }
+    },
+    executive: {
+      primary: { r: 5, g: 150, b: 105 },     // 绿色
+      secondary: { r: 16, g: 185, b: 129 },  // 亮绿
+      background: { r: 240, g: 253, b: 244 }, // 浅绿
+      text: { r: 44, g: 62, b: 80 }
+    }
+  };
+  
+  return themes[template] || themes.modern;
+}
+
+// 添加章节标题
+function addSectionTitle(doc, title, yPos, colors, margin, contentWidth) {
+  // 背景矩形
+  doc.setFillColor(colors.primary.r, colors.primary.g, colors.primary.b);
+  doc.rect(margin - 3, yPos - 5, contentWidth + 6, 10, 'F');
+  
+  // 标题文字
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text(title, margin, yPos + 1);
+  
+  return yPos + 12;
+}
+
 // 生成PDF简历
+=======
 router.post('/generate-pdf', auth, async (req, res) => {
   try {
     const { resumeData, template = 'modern' } = req.body;
@@ -26,92 +74,125 @@ router.post('/generate-pdf', auth, async (req, res) => {
       format: 'a4'
     });
     
-    // 设置字体（jsPDF默认不支持中文，需要特殊处理）
+    // 设置字体
     doc.setFont('helvetica');
     
-    let yPosition = 20;
+    let yPosition = 25;
     const pageWidth = doc.internal.pageSize.getWidth();
     const margin = 20;
     const contentWidth = pageWidth - 2 * margin;
     
+    // 根据模板设置颜色主题
+    const colors = getTemplateColors(template);
+    
+    // 添加页面背景色（浅色）
+    doc.setFillColor(colors.background.r, colors.background.g, colors.background.b);
+    doc.rect(0, 0, pageWidth, doc.internal.pageSize.getHeight(), 'F');
+    
     // 添加个人信息
     const { personalInfo } = resumeData;
     
-    // 姓名 - 大标题
-    doc.setFontSize(24);
+    // 添加顶部装饰条
+    doc.setFillColor(colors.primary.r, colors.primary.g, colors.primary.b);
+    doc.rect(0, 0, pageWidth, 8, 'F');
+    
+    // 姓名 - 大标题，使用主题色
+    doc.setTextColor(colors.primary.r, colors.primary.g, colors.primary.b);
+    doc.setFontSize(28);
     doc.setFont('helvetica', 'bold');
     doc.text(personalInfo.name || 'Name', margin, yPosition);
-    yPosition += 15;
+    yPosition += 12;
     
-    // 联系信息
-    doc.setFontSize(12);
+    // 添加姓名下方的装饰线
+    doc.setDrawColor(colors.primary.r, colors.primary.g, colors.primary.b);
+    doc.setLineWidth(0.5);
+    doc.line(margin, yPosition, margin + 60, yPosition);
+    yPosition += 8;
+    
+    // 联系信息 - 使用图标样式
+    doc.setTextColor(60, 60, 60);
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'normal');
+    
+    let contactY = yPosition;
     if (personalInfo.email) {
-      doc.text(`Email: ${personalInfo.email}`, margin, yPosition);
-      yPosition += 8;
+      doc.text(`📧 ${personalInfo.email}`, margin, contactY);
+      contactY += 6;
     }
     if (personalInfo.phone) {
-      doc.text(`Phone: ${personalInfo.phone}`, margin, yPosition);
-      yPosition += 8;
+      doc.text(`📱 ${personalInfo.phone}`, margin, contactY);
+      contactY += 6;
     }
     if (personalInfo.address) {
-      doc.text(`Address: ${personalInfo.address}`, margin, yPosition);
-      yPosition += 8;
+      doc.text(`📍 ${personalInfo.address}`, margin, contactY);
+      contactY += 6;
     }
     
-    yPosition += 10;
+    yPosition = contactY + 12;
     
     // 个人简介
     if (resumeData.summary) {
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Summary', margin, yPosition);
-      yPosition += 10;
+      yPosition = addSectionTitle(doc, '个人简介', yPosition, colors, margin, contentWidth);
       
+      doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
       doc.setFontSize(11);
       doc.setFont('helvetica', 'normal');
-      const summaryLines = doc.splitTextToSize(resumeData.summary, contentWidth);
-      doc.text(summaryLines, margin, yPosition);
-      yPosition += summaryLines.length * 6 + 10;
+      const summaryLines = doc.splitTextToSize(resumeData.summary, contentWidth - 10);
+      doc.text(summaryLines, margin + 5, yPosition);
+      yPosition += summaryLines.length * 5 + 15;
     }
     
     // 工作经验
     if (resumeData.experience && resumeData.experience.length > 0) {
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Experience', margin, yPosition);
-      yPosition += 10;
+      yPosition = addSectionTitle(doc, '工作经验', yPosition, colors, margin, contentWidth);
       
       resumeData.experience.forEach(exp => {
         // 检查是否需要新页面
         if (yPosition > 250) {
           doc.addPage();
+          // 重新设置背景
+          doc.setFillColor(colors.background.r, colors.background.g, colors.background.b);
+          doc.rect(0, 0, pageWidth, doc.internal.pageSize.getHeight(), 'F');
           yPosition = 20;
         }
         
-        doc.setFontSize(12);
+        // 职位名称 - 使用主题色
+        doc.setTextColor(colors.primary.r, colors.primary.g, colors.primary.b);
+        doc.setFontSize(13);
         doc.setFont('helvetica', 'bold');
-        doc.text(exp.position || 'Position', margin, yPosition);
-        yPosition += 6;
+        doc.text(exp.position || 'Position', margin + 5, yPosition);
+        yPosition += 7;
         
+        // 公司名称 - 使用次要色
+        doc.setTextColor(colors.secondary.r, colors.secondary.g, colors.secondary.b);
+        doc.setFontSize(11);
         doc.setFont('helvetica', 'normal');
-        doc.text(exp.company || 'Company', margin, yPosition);
+        doc.text(exp.company || 'Company', margin + 5, yPosition);
         yPosition += 6;
         
+        // 时间段 - 右对齐
         if (exp.startDate || exp.endDate) {
-          const dateRange = `${formatDate(exp.startDate)} - ${exp.endDate ? formatDate(exp.endDate) : 'Present'}`;
-          doc.text(dateRange, margin, yPosition);
-          yPosition += 6;
-        }
-        
-        if (exp.description) {
+          const dateRange = `${formatDate(exp.startDate)} - ${exp.endDate ? formatDate(exp.endDate) : '至今'}`;
+          doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
           doc.setFontSize(10);
-          const descLines = doc.splitTextToSize(exp.description, contentWidth);
-          doc.text(descLines, margin, yPosition);
-          yPosition += descLines.length * 5 + 8;
+          doc.setFont('helvetica', 'italic');
+          const dateWidth = doc.getTextWidth(dateRange);
+          doc.text(dateRange, pageWidth - margin - dateWidth, yPosition - 13);
         }
         
-        yPosition += 5;
+        // 工作描述
+        if (exp.description) {
+          doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          const descLines = doc.splitTextToSize(exp.description, contentWidth - 15);
+          descLines.forEach(line => {
+            doc.text(`• ${line}`, margin + 8, yPosition);
+            yPosition += 5;
+          });
+        }
+        
+        yPosition += 8;
       });
     }
     
@@ -120,31 +201,40 @@ router.post('/generate-pdf', auth, async (req, res) => {
       // 检查是否需要新页面
       if (yPosition > 220) {
         doc.addPage();
+        // 重新设置背景
+        doc.setFillColor(colors.background.r, colors.background.g, colors.background.b);
+        doc.rect(0, 0, pageWidth, doc.internal.pageSize.getHeight(), 'F');
         yPosition = 20;
       }
       
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Education', margin, yPosition);
-      yPosition += 10;
+      yPosition = addSectionTitle(doc, '教育背景', yPosition, colors, margin, contentWidth);
       
       resumeData.education.forEach(edu => {
+        // 学位和专业 - 使用主题色
+        doc.setTextColor(colors.primary.r, colors.primary.g, colors.primary.b);
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
-        doc.text(`${edu.degree || 'Degree'} ${edu.major || 'Major'}`, margin, yPosition);
-        yPosition += 6;
+        doc.text(`${edu.degree || '学位'} ${edu.major || '专业'}`, margin + 5, yPosition);
+        yPosition += 7;
         
+        // 学校名称 - 使用次要色
+        doc.setTextColor(colors.secondary.r, colors.secondary.g, colors.secondary.b);
+        doc.setFontSize(11);
         doc.setFont('helvetica', 'normal');
-        doc.text(edu.school || 'School', margin, yPosition);
+        doc.text(edu.school || '学校', margin + 5, yPosition);
         yPosition += 6;
         
+        // 时间段 - 右对齐
         if (edu.startDate || edu.endDate) {
-          const dateRange = `${formatDate(edu.startDate)} - ${edu.endDate ? formatDate(edu.endDate) : 'Present'}`;
-          doc.text(dateRange, margin, yPosition);
-          yPosition += 6;
+          const dateRange = `${formatDate(edu.startDate)} - ${edu.endDate ? formatDate(edu.endDate) : '至今'}`;
+          doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'italic');
+          const dateWidth = doc.getTextWidth(dateRange);
+          doc.text(dateRange, pageWidth - margin - dateWidth, yPosition - 13);
         }
         
-        yPosition += 5;
+        yPosition += 8;
       });
     }
     
@@ -153,19 +243,43 @@ router.post('/generate-pdf', auth, async (req, res) => {
       // 检查是否需要新页面
       if (yPosition > 240) {
         doc.addPage();
+        // 重新设置背景
+        doc.setFillColor(colors.background.r, colors.background.g, colors.background.b);
+        doc.rect(0, 0, pageWidth, doc.internal.pageSize.getHeight(), 'F');
         yPosition = 20;
       }
       
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Skills', margin, yPosition);
-      yPosition += 10;
+      yPosition = addSectionTitle(doc, '专业技能', yPosition, colors, margin, contentWidth);
       
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'normal');
-      const skillsText = resumeData.skills[0].items.join(', ');
-      const skillsLines = doc.splitTextToSize(skillsText, contentWidth);
-      doc.text(skillsLines, margin, yPosition);
+      // 技能标签样式
+      const skills = resumeData.skills[0].items;
+      let xPosition = margin + 5;
+      let currentY = yPosition;
+      
+      skills.forEach((skill, index) => {
+        // 设置技能标签样式
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        
+        const skillWidth = doc.getTextWidth(skill) + 8;
+        const skillHeight = 6;
+        
+        // 检查是否需要换行
+        if (xPosition + skillWidth > pageWidth - margin) {
+          xPosition = margin + 5;
+          currentY += 10;
+        }
+        
+        // 绘制技能标签背景
+        doc.setFillColor(colors.primary.r + 30, colors.primary.g + 30, colors.primary.b + 30);
+        doc.roundedRect(xPosition - 2, currentY - 4, skillWidth, skillHeight, 2, 2, 'F');
+        
+        // 绘制技能文字
+        doc.setTextColor(colors.primary.r - 20, colors.primary.g - 20, colors.primary.b - 20);
+        doc.text(skill, xPosition + 2, currentY);
+        
+        xPosition += skillWidth + 8;
+      });
     }
     
     // 生成PDF buffer
