@@ -69,6 +69,24 @@ app.use('/api/template', templateRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/pdf', pdfRoutes);
 
+// 根路径欢迎页面
+app.get('/', (req, res) => {
+  res.json({
+    message: '🚀 简历大师 API 服务',
+    status: 'running',
+    version: '1.0.0',
+    timestamp: new Date().toISOString(),
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth',
+      resume: '/api/resume',
+      template: '/api/template',
+      ai: '/api/ai',
+      pdf: '/api/pdf'
+    }
+  });
+});
+
 // 健康检查
 app.get('/health', (req, res) => {
   res.json({ 
