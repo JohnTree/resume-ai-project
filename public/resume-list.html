@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的简历 - 简历大师</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .resume-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resume-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .resume-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .resume-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .resume-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .resume-template {
+            font-size: 0.875rem;
+            color: #666;
+            background: #f8f9fa;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .resume-meta {
+            font-size: 0.875rem;
+            color: #888;
+            margin-bottom: 1rem;
+        }
+
+        .resume-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-text {
+            color: #888;
+            margin-bottom: 2rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #28a745;
+        }
+
+        .notification.error {
+            background: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            .main-container {
+                padding: 0 1rem;
+            }
+
+            .page-header {
+                padding: 1.5rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .resume-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-file-alt"></i> 简历大师
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">制作简历</a>
+                <a href="resume-list.html" style="color: #667eea;">我的简历</a>
+            </nav>
+            <div class="user-info">
+                <span id="userEmail">未登录</span>
+                <button id="logoutBtn" class="btn btn-secondary btn-sm" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> 退出
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">我的简历</h1>
+            <p class="page-subtitle">管理您保存的简历草稿和已完成的简历</p>
+            <div class="actions">
+                <a href="index.html" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> 创建新简历
+                </a>
+                <button id="refreshBtn" class="btn btn-secondary">
+                    <i class="fas fa-sync-alt"></i> 刷新
+                </button>
+            </div>
+        </div>
+
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <p>正在加载简历列表...</p>
+        </div>
+
+        <div id="resumeList" class="resume-grid" style="display: none;"></div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <h2 class="empty-title">还没有简历</h2>
+            <p class="empty-text">开始创建您的第一份专业简历吧！</p>
+            <a href="index.html" class="btn btn-primary">
+                <i class="fas fa-plus"></i> 创建简历
+            </a>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        
+        // 认证管理
+        const authManager = {
+            token: localStorage.getItem('authToken'),
+            user: JSON.parse(localStorage.getItem('user') || 'null'),
+            
+            isLoggedIn() {
+                return this.token && this.user;
+            },
+            
+            logout() {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('user');
+                window.location.href = 'index.html';
+            }
+        };
+
+        // 通知系统
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // 获取模板显示名称
+        function getTemplateName(template) {
+            const templateNames = {
+                'modern': '现代简约',
+                'traditional': '传统经典',
+                'split': '双栏分割',
+                'colorful': '彩色卡片',
+                'tech': '科技未来',
+                'magazine': '优雅杂志',
+                'infographic': '信息图表',
+                'artistic': '创意艺术',
+                'minimal': '极简商务'
+            };
+            return templateNames[template] || template;
+        }
+
+        // 加载简历列表
+        async function loadResumeList() {
+            if (!authManager.isLoggedIn()) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                document.getElementById('loadingState').style.display = 'block';
+                document.getElementById('resumeList').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'none';
+
+                const response = await fetch(`${API_BASE}/resume`, {
+                    headers: {
+                        'Authorization': `Bearer ${authManager.token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayResumeList(data.resumes);
+                } else {
+                    throw new Error('获取简历列表失败');
+                }
+            } catch (error) {
+                console.error('加载简历列表错误:', error);
+                showNotification('加载简历列表失败', 'error');
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'block';
+            }
+        }
+
+        // 显示简历列表
+        function displayResumeList(resumes) {
+            document.getElementById('loadingState').style.display = 'none';
+            
+            if (resumes.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+
+            const resumeList = document.getElementById('resumeList');
+            resumeList.style.display = 'grid';
+            
+            resumeList.innerHTML = resumes.map(resume => `
+                <div class="resume-card" onclick="editResume('${resume._id}')">
+                    <div class="resume-header">
+                        <div>
+                            <h3 class="resume-title">${resume.title}</h3>
+                            <span class="resume-template">${getTemplateName(resume.template)}</span>
+                        </div>
+                    </div>
+                    <div class="resume-meta">
+                        <div><i class="fas fa-calendar"></i> 创建于 ${formatDate(resume.createdAt)}</div>
+                        <div><i class="fas fa-edit"></i> 更新于 ${formatDate(resume.updatedAt)}</div>
+                    </div>
+                    <div class="resume-actions" onclick="event.stopPropagation()">
+                        <button class="btn btn-primary btn-sm" onclick="editResume('${resume._id}')">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="downloadResume('${resume._id}')">
+                            <i class="fas fa-download"></i> 下载
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteResume('${resume._id}')">
+                            <i class="fas fa-trash"></i> 删除
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 编辑简历
+        function editResume(resumeId) {
+            window.location.href = `index.html?resume=${resumeId}`;
+        }
+
+        // 下载简历
+        async function downloadResume(resumeId) {
+            try {
+                const response = await fetch(`${API_BASE}/resume/${resumeId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${authManager.token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // 这里可以调用PDF生成接口
+                    showNotification('PDF生成功能开发中', 'info');
+                } else {
+                    throw new Error('获取简历数据失败');
+                }
+            } catch (error) {
+                console.error('下载简历错误:', error);
+                showNotification('下载失败', 'error');
+            }
+        }
+
+        // 删除简历
+        async function deleteResume(resumeId) {
+            if (!confirm('确定要删除这份简历吗？此操作不可恢复。')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/resume/${resumeId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${authManager.token}`
+                    }
+                });
+
+                if (response.ok) {
+                    showNotification('简历删除成功', 'success');
+                    loadResumeList(); // 重新加载列表
+                } else {
+                    throw new Error('删除简历失败');
+                }
+            } catch (error) {
+                console.error('删除简历错误:', error);
+                showNotification('删除失败', 'error');
+            }
+        }
+
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态
+            if (authManager.isLoggedIn()) {
+                document.getElementById('userEmail').textContent = authManager.user.email;
+                document.getElementById('logoutBtn').style.display = 'inline-flex';
+            } else {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // 绑定事件
+            document.getElementById('logoutBtn').addEventListener('click', authManager.logout);
+            document.getElementById('refreshBtn').addEventListener('click', loadResumeList);
+
+            // 加载简历列表
+            loadResumeList();
+        });
+    </script>
+</body>
+</html>

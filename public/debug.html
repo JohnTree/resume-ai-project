@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:3000;">
+    <title>AI优化测试</title>
+</head>
+<body>
+    <h1>AI优化功能测试</h1>
+    
+    <div>
+        <h3>个人简介测试</h3>
+        <textarea id="summary" placeholder="输入个人简介">我是一名产品经理，有3年互联网产品设计经验</textarea>
+        <br><br>
+        <button onclick="testOptimize('summary')">测试AI优化</button>
+    </div>
+    
+    <div>
+        <h3>技能测试</h3>
+        <textarea id="skills" placeholder="输入技能">JavaScript, React, Node.js, Python</textarea>
+        <br><br>
+        <button onclick="testOptimize('skills')">测试技能优化</button>
+    </div>
+    
+    <div id="result" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;"></div>
+
+    <script>
+        let authToken = '';
+        
+        // 自动注册
+        async function autoRegister() {
+            try {
+                console.log('开始注册...');
+                const response = await fetch('http://localhost:3000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: `user${Date.now()}@resumeai.com`,
+                        password: '123456',
+                        name: '测试用户'
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    authToken = data.token;
+                    console.log('注册成功，token:', authToken);
+                    document.getElementById('result').innerHTML = `<p style="color: green;">注册成功！Token: ${authToken.substring(0, 20)}...</p>`;
+                } else {
+                    console.error('注册失败');
+                    document.getElementById('result').innerHTML = `<p style="color: red;">注册失败</p>`;
+                }
+            } catch (error) {
+                console.error('注册错误:', error);
+                document.getElementById('result').innerHTML = `<p style="color: red;">注册错误: ${error.message}</p>`;
+            }
+        }
+        
+        // 测试优化
+        async function testOptimize(type) {
+            if (!authToken) {
+                await autoRegister();
+                if (!authToken) {
+                    alert('请先注册');
+                    return;
+                }
+            }
+            
+            const content = document.getElementById(type).value;
+            if (!content.trim()) {
+                alert('请输入内容');
+                return;
+            }
+            
+            try {
+                console.log('开始优化，类型:', type, '内容:', content);
+                const response = await fetch('http://localhost:3000/api/ai/optimize', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        type: type
+                    })
+                });
+                
+                const data = await response.json();
+                console.log('优化结果:', data);
+                
+                if (response.ok) {
+                    document.getElementById('result').innerHTML = `
+                        <h4>优化成功！</h4>
+                        <p><strong>原内容:</strong> ${data.optimized.originalContent}</p>
+                        <p><strong>优化后:</strong> ${data.optimized.optimizedContent}</p>
+                        <p><strong>评分:</strong> ${data.optimized.score}/100</p>
+                        <p><strong>建议:</strong></p>
+                        <ul>
+                            ${data.optimized.suggestions.map(s => `<li>${s}</li>`).join('')}
+                        </ul>
+                    `;
+                } else {
+                    document.getElementById('result').innerHTML = `<p style="color: red;">优化失败: ${data.error || data.message}</p>`;
+                }
+            } catch (error) {
+                console.error('优化错误:', error);
+                document.getElementById('result').innerHTML = `<p style="color: red;">网络错误: ${error.message}</p>`;
+            }
+        }
+        
+        // 页面加载时自动注册
+        window.onload = function() {
+            autoRegister();
+        };
+    </script>
+</body>
+</html>

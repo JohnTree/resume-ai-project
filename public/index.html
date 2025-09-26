@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简历大师 - AI智能简历生成器</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="templates.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #f1f5f9;
+            --accent-color: #10b981;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* Editor Panel */
+        .editor-panel {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .panel-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .panel-content {
+            padding: 2rem;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        /* Template Selector */
+        .template-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .template-card {
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .template-card.active {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Pro模板样式 */
+        .template-card.pro-template {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pro-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: linear-gradient(135deg, #FFB800 0%, #FF8C00 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            z-index: 2;
+            box-shadow: 0 2px 12px rgba(255, 184, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .pro-badge:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(255, 184, 0, 0.5);
+        }
+
+        .pro-crown {
+            font-size: 12px;
+            color: #ffd700;
+            text-shadow: 0 0 3px rgba(255, 215, 0, 0.5);
+            animation: crownGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes crownGlow {
+            from { text-shadow: 0 0 3px rgba(255, 215, 0, 0.5); }
+            to { text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 12px rgba(255, 215, 0, 0.4); }
+        }
+
+        .pro-lock {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .template-card.pro-template:hover .pro-lock {
+            opacity: 1;
+        }
+
+        .pro-lock svg {
+            width: 20px;
+            height: 20px;
+            fill: #667eea;
+        }
+
+        .pro-tooltip {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 3;
+        }
+
+        .pro-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid #333;
+        }
+
+        .template-card.pro-template:hover .pro-tooltip {
+            opacity: 1;
+            bottom: -40px;
+        }
+
+        /* 免费模板保持原样 */
+        .template-card.free-template {
+            border-color: #4CAF50;
+        }
+
+        .free-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #4CAF50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 0 12px 0 12px;
+            font-size: 10px;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        /* 解锁模板样式 */
+        .template-card.unlocked-template {
+            border-color: #10b981;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .template-card.unlocked-template::before {
+            display: none;
+        }
+
+        .template-card.unlocked-template:hover {
+            border-color: #059669;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .template-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .template-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .template-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-ai {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        .btn-ai:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-color), #059669);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-text {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .btn-text:hover {
+            color: var(--primary-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* 付费墙样式 */
+        .paywall-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .paywall-modal {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .paywall-icon {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .paywall-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .paywall-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .paywall-features {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .paywall-features li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .paywall-features li:before {
+            content: "✨";
+            color: var(--primary-color);
+        }
+
+        .paywall-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* 登录模态框样式 */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .auth-form {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .auth-title {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+            background: var(--secondary-color);
+            padding: 0.25rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .auth-tab.active {
+            background: white;
+            color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .auth-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* Preview Panel */
+        .preview-panel {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            position: sticky;
+            top: 120px;
+            max-height: calc(100vh - 140px);
+        }
+
+        .preview-header {
+            background: linear-gradient(135deg, var(--accent-color), #059669);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .preview-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .preview-content {
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 300px);
+        }
+
+        /* Resume Preview Styles */
+        .resume-preview {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .resume-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .resume-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--template-primary, var(--primary-color));
+            margin-bottom: 0.75rem;
+        }
+
+        .resume-contact {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            color: var(--text-secondary);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .resume-section {
+            margin-bottom: 2rem;
+        }
+
+        .resume-section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--template-primary, var(--primary-color));
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .resume-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .resume-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-item-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .resume-item-subtitle {
+            color: var(--template-primary, var(--primary-color));
+            font-weight: 500;
+        }
+
+        .resume-item-date {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .resume-item-description {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            color: var(--template-primary, var(--primary-color));
+            padding: 0.375rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        
+        /* 模板特定样式 */
+        .template-creative .resume-name {
+            font-style: italic;
+        }
+        
+        .template-creative .skill-tag {
+            background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+        
+        .template-executive .resume-section-title {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1.1rem;
+        }
+        
+        .template-executive .skill-tag {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border-color: rgba(5, 150, 105, 0.2);
+        }
+
+        /* AI Suggestions */
+        .ai-suggestions {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 1px solid #0ea5e9;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .ai-suggestions-title {
+            color: #0c4a6e;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-suggestions-list {
+            list-style: none;
+        }
+
+        .ai-suggestions-list li {
+            color: #0369a1;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .ai-suggestions-list li:before {
+            content: "✨";
+            position: absolute;
+            left: 0;
+        }
+
+        /* Loading States */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .preview-panel {
+                position: static;
+                max-height: none;
+            }
+            
+            .template-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .template-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .resume-contact {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-magic"></i>
+                    <span>简历大师</span>
+                </div>
+                <div class="header-actions">
+                    <a href="resume-list.html" id="resumeListLink" class="btn btn-secondary btn-sm" style="display: none;">
+                        <i class="fas fa-list"></i>
+                        我的简历
+                    </a>
+                    <button id="saveDraftBtn" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-save"></i>
+                        保存草稿
+                    </button>
+                    <button id="upgradeProBtn" class="btn btn-primary btn-sm">
+                        <i class="fas fa-crown"></i>
+                        升级Pro
+                    </button>
+                    <button id="loginBtn" class="btn btn-outline btn-sm" style="display: none;">
+                        <i class="fas fa-user"></i>
+                        登录
+                    </button>
+                    <div id="userInfo" class="user-info" style="display: none;">
+                        <span id="userName"></span>
+                        <button id="logoutBtn" class="btn btn-text btn-sm">退出</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Editor Panel -->
+            <div class="editor-panel fade-in">
+                <div class="panel-header">
+                    <i class="fas fa-edit"></i>
+                    <h2>简历编辑器</h2>
+                </div>
+                <div class="panel-content">
+                    <!-- Template Selection -->
+                    <div class="template-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-palette"></i>
+                            选择模板
+                        </h3>
+                        <div class="template-grid" style="grid-template-columns: repeat(4, 1fr);">
+                            <div class="template-card active free-template" data-template="traditional">
+                                <div class="free-badge">FREE</div>
+                                <i class="template-icon fas fa-file-alt" style="color: #000000;"></i>
+                                <div class="template-name">📋 传统简历</div>
+                                <div class="template-desc">经典黑白，正式严谨</div>
+                            </div>
+                            <div class="template-card free-template" data-template="split">
+                                <div class="free-badge">FREE</div>
+                                <i class="template-icon fas fa-columns" style="color: #2563eb;"></i>
+                                <div class="template-name">🎯 双栏分割</div>
+                                <div class="template-desc">左右分栏，现代商务</div>
+                            </div>
+                            <div class="template-card pro-template" data-template="colorful">
+                                <div class="pro-badge">
+                                    <span class="pro-crown">👑</span>
+                                    PRO
+                                </div>
+                                <div class="pro-lock">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10A2,2 0 0,1 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                                    </svg>
+                                </div>
+                                <div class="pro-tooltip">升级Pro解锁</div>
+                                <i class="template-icon fas fa-palette" style="color: #ff6b6b;"></i>
+                                <div class="template-name">🌈 彩色卡片</div>
+                                <div class="template-desc">多彩卡片，活力四射</div>
+                            </div>
+                            <div class="template-card pro-template" data-template="tech">
+                                <div class="pro-badge">
+                                    <span class="pro-crown">👑</span>
+                                    PRO
+                                </div>
+                                <div class="pro-lock">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10A2,2 0 0,1 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                                    </svg>
+                                </div>
+                                <div class="pro-tooltip">升级Pro解锁</div>
+                                <i class="template-icon fas fa-terminal" style="color: #00ff88;"></i>
+                                <div class="template-name">⚡ 科技未来</div>
+                                <div class="template-desc">霓虹效果，科技感十足</div>
+                            </div>
+                            <div class="template-card pro-template" data-template="magazine">
+                                <div class="pro-badge">
+                                    <span class="pro-crown">👑</span>
+                                    PRO
+                                </div>
+                                <div class="pro-lock">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10A2,2 0 0,1 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                                    </svg>
+                                </div>
+                                <div class="pro-tooltip">升级Pro解锁</div>
+                                <i class="template-icon fas fa-book-open" style="color: #be185d;"></i>
+                                <div class="template-name">🌸 优雅杂志</div>
+                                <div class="template-desc">杂志排版，优雅时尚</div>
+                            </div>
+                            <div class="template-card pro-template" data-template="infographic">
+                                <div class="pro-badge">
+                                    <span class="pro-crown">👑</span>
+                                    PRO
+                                </div>
+                                <div class="pro-lock">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10A2,2 0 0,1 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                                    </svg>
+                                </div>
+                                <div class="pro-tooltip">升级Pro解锁</div>
+                                <i class="template-icon fas fa-chart-bar" style="color: #feca57;"></i>
+                                <div class="template-name">📊 信息图表</div>
+                                <div class="template-desc">数据可视化，专业直观</div>
+                            </div>
+                            <div class="template-card pro-template" data-template="artistic">
+                                <div class="pro-badge">
+                                    <span class="pro-crown">👑</span>
+                                    PRO
+                                </div>
+                                <div class="pro-lock">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10A2,2 0 0,1 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                                    </svg>
+                                </div>
+                                <div class="pro-tooltip">升级Pro解锁</div>
+                                <i class="template-icon fas fa-paint-brush" style="color: #6c5ce7;"></i>
+                                <div class="template-name">🎨 创意艺术</div>
+                                <div class="template-desc">几何图形，艺术创意</div>
+                            </div>
+                            <div class="template-card pro-template" data-template="minimal">
+                                <div class="pro-badge">
+                                    <span class="pro-crown">👑</span>
+                                    PRO
+                                </div>
+                                <div class="pro-lock">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10A2,2 0 0,1 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                                    </svg>
+                                </div>
+                                <div class="pro-tooltip">升级Pro解锁</div>
+                                <i class="template-icon fas fa-minus" style="color: #2c3e50;"></i>
+                                <div class="template-name">💼 极简商务</div>
+                                <div class="template-desc">超简洁线条，商务专业</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-user"></i>
+                            个人信息
+                        </h3>
+                        <div class="form-group">
+                            <label class="form-label">姓名 *</label>
+                            <input type="text" class="form-input" id="name" placeholder="请输入您的姓名">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">邮箱 *</label>
+                                <input type="email" class="form-input" id="email" placeholder="your.email@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">电话</label>
+                                <input type="tel" class="form-input" id="phone" placeholder="138-0000-0000">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">地址</label>
+                            <input type="text" class="form-input" id="address" placeholder="北京市朝阳区">
+                        </div>
+                    </div>
+
+                    <!-- Personal Summary -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-quote-left"></i>
+                            个人简介
+                        </h3>
+                        <div class="form-group">
+                            <textarea class="form-textarea" id="summary" placeholder="简要介绍您的专业背景、核心技能和职业目标..."></textarea>
+                            <button class="btn btn-ai btn-sm" onclick="optimizeContent('summary')" style="margin-top: 0.75rem;">
+                                <i class="fas fa-magic"></i>
+                                AI智能优化
+                            </button>
+                            <div class="ai-suggestions" id="summary-suggestions"></div>
+                        </div>
+                    </div>
+
+                    <!-- Work Experience -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-briefcase"></i>
+                            工作经验
+                        </h3>
+                        <div id="experience-list">
+                            <div class="experience-item">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">公司名称</label>
+                                        <input type="text" class="form-input exp-company" placeholder="公司名称">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">职位</label>
+                                        <input type="text" class="form-input exp-position" placeholder="职位名称">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">开始时间</label>
+                                        <input type="month" class="form-input exp-start">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">结束时间</label>
+                                        <input type="month" class="form-input exp-end">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">工作描述</label>
+                                    <textarea class="form-textarea exp-description" placeholder="描述您的主要职责和成就..."></textarea>
+                                    <button class="btn btn-ai btn-sm" onclick="optimizeExperience(this)" style="margin-top: 0.75rem;">
+                                        <i class="fas fa-magic"></i>
+                                        AI优化
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="addExperience()">
+                            <i class="fas fa-plus"></i>
+                            添加工作经验
+                        </button>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-graduation-cap"></i>
+                            教育背景
+                        </h3>
+                        <div id="education-list">
+                            <div class="education-item">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">学校名称</label>
+                                        <input type="text" class="form-input edu-school" placeholder="学校名称">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">专业</label>
+                                        <input type="text" class="form-input edu-major" placeholder="专业名称">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">学历</label>
+                                        <select class="form-select edu-degree">
+                                            <option value="">请选择学历</option>
+                                            <option value="高中">高中</option>
+                                            <option value="大专">大专</option>
+                                            <option value="本科">本科</option>
+                                            <option value="硕士">硕士</option>
+                                            <option value="博士">博士</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">毕业时间</label>
+                                        <input type="month" class="form-input edu-end">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="addEducation()">
+                            <i class="fas fa-plus"></i>
+                            添加教育经历
+                        </button>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-cogs"></i>
+                            专业技能
+                        </h3>
+                        <div class="form-group">
+                            <textarea class="form-textarea" id="skills" placeholder="JavaScript, React, Node.js, Python, 项目管理, 团队协作..."></textarea>
+                            <button class="btn btn-ai btn-sm" onclick="optimizeContent('skills')" style="margin-top: 0.75rem;">
+                                <i class="fas fa-magic"></i>
+                                AI优化技能
+                            </button>
+                            <div class="ai-suggestions" id="skills-suggestions"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="preview-panel fade-in">
+                <div class="preview-header">
+                    <div class="preview-title">
+                        <i class="fas fa-eye"></i>
+                        简历预览
+                    </div>
+                    <div class="preview-actions">
+                        <button class="btn btn-success btn-sm" onclick="generatePDF()">
+                            <i class="fas fa-download"></i>
+                            下载PDF
+                        </button>
+                    </div>
+                </div>
+                <div class="preview-content">
+                    <div class="resume-preview" id="resume-preview">
+                        <div class="resume-header">
+                            <div class="resume-name" id="preview-name">您的姓名</div>
+                            <div class="resume-contact" id="preview-contact">
+                                <div class="contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>邮箱地址</span>
+                                </div>
+                                <div class="contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>电话号码</span>
+                                </div>
+                                <div class="contact-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>居住地址</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="resume-section" id="preview-summary-section" style="display: none;">
+                            <h4 class="resume-section-title">个人简介</h4>
+                            <div id="preview-summary"></div>
+                        </div>
+
+                        <div class="resume-section" id="preview-experience-section" style="display: none;">
+                            <h4 class="resume-section-title">工作经验</h4>
+                            <div id="preview-experience"></div>
+                        </div>
+
+                        <div class="resume-section" id="preview-education-section" style="display: none;">
+                            <h4 class="resume-section-title">教育背景</h4>
+                            <div id="preview-education"></div>
+                        </div>
+
+                        <div class="resume-section" id="preview-skills-section" style="display: none;">
+                            <h4 class="resume-section-title">专业技能</h4>
+                            <div class="skills-grid" id="preview-skills"></div>
+                        </div>
+                    </div>
+
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <div>正在生成PDF，请稍候...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 登录/注册模态框 -->
+    <div id="authModal" class="auth-modal" style="display: none;">
+        <div class="auth-form">
+            <button class="close-btn" onclick="closeAuthModal()">&times;</button>
+            <h2 class="auth-title">欢迎使用简历大师</h2>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchAuthTab('login')">登录</div>
+                <div class="auth-tab" onclick="switchAuthTab('register')">注册</div>
+            </div>
+
+            <!-- 登录表单 -->
+            <form id="loginForm" style="display: block;">
+                <div class="auth-form-group">
+                    <label class="form-label">邮箱</label>
+                    <input type="email" class="form-input" id="loginEmail" placeholder="请输入邮箱" required>
+                </div>
+                <div class="auth-form-group">
+                    <label class="form-label">密码</label>
+                    <input type="password" class="form-input" id="loginPassword" placeholder="请输入密码" required>
+                </div>
+                <div class="auth-form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-sign-in-alt"></i>
+                        登录
+                    </button>
+                </div>
+            </form>
+
+            <!-- 注册表单 -->
+            <form id="registerForm" style="display: none;">
+                <div class="auth-form-group">
+                    <label class="form-label">姓名</label>
+                    <input type="text" class="form-input" id="registerName" placeholder="请输入姓名" required>
+                </div>
+                <div class="auth-form-group">
+                    <label class="form-label">邮箱</label>
+                    <input type="email" class="form-input" id="registerEmail" placeholder="请输入邮箱" required>
+                </div>
+                <div class="auth-form-group">
+                    <label class="form-label">密码</label>
+                    <input type="password" class="form-input" id="registerPassword" placeholder="请输入密码（至少6位）" required>
+                </div>
+                <div class="auth-form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-user-plus"></i>
+                        注册
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 付费墙模态框 -->
+    <div id="paywallModal" class="paywall-overlay" style="display: none;">
+        <div class="paywall-modal">
+            <div class="paywall-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h2 class="paywall-title">升级到Pro版本</h2>
+            <p class="paywall-description">
+                解锁全部功能，让您的简历更加出色！
+            </p>
+            
+            <ul class="paywall-features">
+                <li>解锁全部8个精美模板</li>
+                <li>无限保存和编辑简历</li>
+                <li>高质量PDF导出（无水印）</li>
+                <li>AI智能优化建议</li>
+                <li>多种导出格式支持</li>
+                <li>云端数据同步</li>
+                <li>优先客服支持</li>
+            </ul>
+            
+            <div class="paywall-actions">
+                <button class="btn btn-primary" onclick="startPayment()">
+                    <i class="fas fa-credit-card"></i>
+                    立即升级 ¥29/月
+                </button>
+                <button class="btn btn-secondary" onclick="closePaywall()">
+                    稍后再说
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="template-visibility.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

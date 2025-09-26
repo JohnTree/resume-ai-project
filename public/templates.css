@@ -1,0 +1,1881 @@
+/* 8种简历模板样式 - 根据用户图片精确设计 */
+
+/* 基础样式重置 */
+.resume-preview {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+    line-height: 1.4;
+    overflow: hidden;
+    min-height: 800px;
+}
+
+/* 模板1：传统简历 - 经典单栏黑白布局 */
+.template-traditional .resume-preview {
+    background: white;
+    padding: 40px;
+    border: 2px solid #000;
+}
+
+.template-traditional .resume-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #000;
+}
+
+.template-traditional .resume-name {
+    font-size: 36px;
+    font-weight: bold;
+    color: #000;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.template-traditional .resume-title {
+    font-size: 16px;
+    color: #333;
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+}
+
+.template-traditional .resume-contact {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: #000;
+}
+
+.template-traditional .resume-section {
+    margin-bottom: 25px;
+}
+
+.template-traditional .section-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 5px;
+}
+
+.template-traditional .section-content {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.template-traditional .experience-item,
+.template-traditional .education-item {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+}
+
+.template-traditional .item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.template-traditional .item-title {
+    font-weight: bold;
+    color: #000;
+}
+
+.template-traditional .item-company {
+    color: #666;
+    font-style: italic;
+}
+
+.template-traditional .item-date {
+    color: #666;
+    font-size: 12px;
+}
+
+.template-traditional .skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.template-traditional .skill-item {
+    background: #f0f0f0;
+    color: #000;
+    padding: 4px 8px;
+    border: 1px solid #000;
+    font-size: 12px;
+}
+
+/* 模板2：双栏分割 - 蓝色现代商务风 */
+.template-split .resume-preview {
+    display: flex;
+    background: white;
+}
+
+.template-split .left-column {
+    width: 350px;
+    background: linear-gradient(180deg, #2563eb, #1d4ed8);
+    color: white;
+    padding: 40px 30px;
+}
+
+.template-split .profile-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.template-split .profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: rgba(255,255,255,0.8);
+    border: 3px solid rgba(255,255,255,0.3);
+}
+
+.template-split .profile-name {
+    font-size: 26px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+}
+
+.template-split .profile-role {
+    font-size: 14px;
+    color: rgba(255,255,255,0.9);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.template-split .sidebar-section {
+    margin-bottom: 30px;
+}
+
+.template-split .sidebar-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid rgba(255,255,255,0.3);
+    padding-bottom: 8px;
+}
+
+.template-split .contact-info {
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.template-split .contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.template-split .contact-item i {
+    width: 18px;
+    margin-right: 10px;
+}
+
+.template-split .skill-bars .skill-item {
+    margin-bottom: 15px;
+}
+
+.template-split .skill-name {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.template-split .skill-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.template-split .skill-progress {
+    height: 100%;
+    background: rgba(255,255,255,0.9);
+    border-radius: 2px;
+}
+
+.template-split .right-column {
+    flex: 1;
+    padding: 40px;
+    background: white;
+}
+
+.template-split .main-header {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #2563eb;
+}
+
+.template-split .main-name {
+    font-size: 36px;
+    font-weight: bold;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+}
+
+.template-split .main-title {
+    font-size: 18px;
+    color: #2563eb;
+    margin: 0;
+}
+
+.template-split .main-section {
+    margin-bottom: 30px;
+}
+
+.template-split .main-section-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1e293b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.template-split .main-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: #2563eb;
+}
+
+.template-split .main-content {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.6;
+}
+
+.template-split .experience-item,
+.template-split .education-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8fafc;
+    border-left: 4px solid #2563eb;
+    border-radius: 0 8px 8px 0;
+}
+
+.template-split .item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.template-split .item-position {
+    font-weight: bold;
+    color: #1e293b;
+}
+
+.template-split .item-company {
+    color: #2563eb;
+    font-weight: 500;
+}
+
+.template-split .item-date {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.template-split .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.template-split .skill-tag {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* 模板3：彩色卡片 - 红色活泼卡片风 */
+.template-colorful .resume-preview {
+    background: #fef2f2;
+    padding: 30px;
+}
+
+.template-colorful .header-card {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+}
+
+.template-colorful .header-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    color: rgba(255,255,255,0.9);
+    border: 3px solid rgba(255,255,255,0.3);
+}
+
+.template-colorful .header-name {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.template-colorful .header-role {
+    font-size: 16px;
+    color: rgba(255,255,255,0.9);
+    margin: 0 0 15px 0;
+}
+
+.template-colorful .header-contact {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 14px;
+}
+
+.template-colorful .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.template-colorful .cards-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.template-colorful .info-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-top: 4px solid #ef4444;
+}
+
+.template-colorful .card-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ef4444;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.template-colorful .card-content {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.6;
+}
+
+.template-colorful .experience-card,
+.template-colorful .education-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-left: 4px solid #ef4444;
+}
+
+.template-colorful .card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.template-colorful .card-position {
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.template-colorful .card-company {
+    color: #ef4444;
+    font-weight: 500;
+}
+
+.template-colorful .card-date {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.template-colorful .skill-bubbles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.template-colorful .skill-bubble {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.template-colorful .full-width-card {
+    grid-column: 1 / -1;
+}
+
+/* 模板4：科技未来 - 绿色科技几何风 */
+.template-tech .resume-preview {
+    background: #0a0a0a;
+    color: #00ff88;
+    padding: 0;
+    border: 2px solid #00ff88;
+    position: relative;
+    overflow: hidden;
+}
+
+.template-tech .tech-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(rgba(0,255,136,0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+}
+
+.template-tech .tech-header {
+    background: linear-gradient(135deg, #001a0d, #003d1f);
+    padding: 40px;
+    text-align: center;
+    border-bottom: 2px solid #00ff88;
+    position: relative;
+}
+
+.template-tech .tech-avatar {
+    width: 120px;
+    height: 120px;
+    border: 3px solid #00ff88;
+    border-radius: 0;
+    background: rgba(0,255,136,0.1);
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: #00ff88;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.template-tech .tech-name {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #00ff88;
+    text-shadow: 0 0 10px rgba(0,255,136,0.5);
+}
+
+.template-tech .tech-role {
+    font-size: 16px;
+    color: #66ffaa;
+    margin: 0 0 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.template-tech .tech-contact {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: #00ff88;
+}
+
+.template-tech .tech-body {
+    padding: 40px;
+    background: rgba(0,26,13,0.8);
+}
+
+.template-tech .tech-section {
+    margin-bottom: 35px;
+    padding: 20px;
+    border: 1px solid #00ff88;
+    border-radius: 0;
+    background: rgba(0,255,136,0.05);
+    position: relative;
+}
+
+.template-tech .tech-section::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #00ff88, #66ffaa, #00ff88);
+    z-index: -1;
+    border-radius: 0;
+}
+
+.template-tech .tech-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,26,13,0.9);
+    z-index: -1;
+}
+
+.template-tech .tech-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #00ff88;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    position: relative;
+    padding-left: 20px;
+}
+
+.template-tech .tech-title::before {
+    content: '▶';
+    position: absolute;
+    left: 0;
+    color: #00ff88;
+}
+
+.template-tech .tech-content {
+    font-size: 14px;
+    color: #66ffaa;
+    line-height: 1.6;
+}
+
+.template-tech .tech-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-left: 3px solid #00ff88;
+    background: rgba(0,255,136,0.05);
+}
+
+.template-tech .tech-item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.template-tech .tech-position {
+    font-weight: bold;
+    color: #00ff88;
+    text-transform: uppercase;
+}
+
+.template-tech .tech-company {
+    color: #66ffaa;
+}
+
+.template-tech .tech-date {
+    color: #44cc77;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+}
+
+.template-tech .tech-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.template-tech .tech-skill {
+    background: transparent;
+    color: #00ff88;
+    border: 1px solid #00ff88;
+    padding: 6px 12px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.template-tech .tech-skill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,255,136,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.template-tech .tech-skill:hover::before {
+    left: 100%;
+}
+
+/* 模板5：优雅杂志 - 粉红杂志排版风 */
+.template-magazine .resume-preview {
+    background: #fdf2f8;
+    padding: 0;
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.template-magazine .magazine-header {
+    background: linear-gradient(135deg, #be185d, #a21caf);
+    color: white;
+    padding: 50px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.template-magazine .magazine-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+    background-size: 30px 30px;
+    animation: float 20s linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.template-magazine .magazine-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    margin: 0 auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    color: rgba(255,255,255,0.9);
+    border: 4px solid rgba(255,255,255,0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.template-magazine .magazine-name {
+    font-size: 42px;
+    font-weight: bold;
+    margin: 0 0 12px 0;
+    font-style: italic;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
+}
+
+.template-magazine .magazine-tagline {
+    font-size: 18px;
+    color: rgba(255,255,255,0.9);
+    margin: 0 0 20px 0;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+}
+
+.template-magazine .magazine-contact {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+}
+
+.template-magazine .magazine-body {
+    padding: 40px;
+    background: white;
+}
+
+.template-magazine .magazine-columns {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+}
+
+.template-magazine .main-column {
+    padding-right: 20px;
+}
+
+.template-magazine .sidebar-column {
+    padding-left: 20px;
+    border-left: 2px solid #f3e8ff;
+}
+
+.template-magazine .magazine-section {
+    margin-bottom: 35px;
+}
+
+.template-magazine .magazine-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #be185d;
+    margin-bottom: 20px;
+    font-style: italic;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.template-magazine .magazine-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #be185d, #a21caf);
+}
+
+.template-magazine .magazine-content {
+    font-size: 15px;
+    color: #374151;
+    line-height: 1.8;
+    text-align: justify;
+}
+
+.template-magazine .magazine-item {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: #fdf2f8;
+    border-radius: 10px;
+    border-top: 4px solid #be185d;
+    box-shadow: 0 2px 8px rgba(190, 24, 93, 0.1);
+}
+
+.template-magazine .magazine-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.template-magazine .magazine-position {
+    font-size: 18px;
+    font-weight: bold;
+    color: #be185d;
+    font-style: italic;
+}
+
+.template-magazine .magazine-company {
+    color: #6b7280;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.template-magazine .magazine-date {
+    color: #9ca3af;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.template-magazine .sidebar-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #fdf2f8;
+    border-radius: 10px;
+    border-left: 4px solid #be185d;
+}
+
+.template-magazine .sidebar-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #be185d;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.template-magazine .sidebar-content {
+    font-size: 13px;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+.template-magazine .elegant-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.template-magazine .elegant-skill {
+    background: linear-gradient(135deg, #be185d, #a21caf);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.template-magazine .quote-section {
+    background: linear-gradient(135deg, #fdf2f8, #fce7f3);
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 4px solid #be185d;
+    margin: 30px 0;
+    position: relative;
+}
+
+.template-magazine .quote-section::before {
+    content: '"';
+    font-size: 60px;
+    color: #be185d;
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    opacity: 0.3;
+}
+
+.template-magazine .quote-text {
+    font-size: 16px;
+    color: #374151;
+    font-style: italic;
+    line-height: 1.6;
+    padding-left: 30px;
+}
+
+/* 模板6：信息图表 - 黄色数据可视化风 */
+.template-infographic .resume-preview {
+    background: #fffbeb;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+.template-infographic .infographic-header {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.template-infographic .info-avatar {
+    width: 120px;
+    height: 120px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: rgba(255,255,255,0.9);
+    border: 3px solid rgba(255,255,255,0.3);
+}
+
+.template-infographic .info-details {
+    flex: 1;
+}
+
+.template-infographic .info-name {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.template-infographic .info-role {
+    font-size: 18px;
+    color: rgba(255,255,255,0.9);
+    margin: 0 0 15px 0;
+}
+
+.template-infographic .info-contact {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 14px;
+}
+
+.template-infographic .info-body {
+    padding: 40px;
+}
+
+.template-infographic .stats-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.template-infographic .stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+    border-top: 4px solid #f59e0b;
+}
+
+.template-infographic .stat-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #f59e0b;
+    margin-bottom: 5px;
+}
+
+.template-infographic .stat-label {
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.template-infographic .chart-section {
+    margin-bottom: 40px;
+}
+
+.template-infographic .chart-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #92400e;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.template-infographic .chart-title::before {
+    content: '📊';
+    font-size: 24px;
+}
+
+.template-infographic .skill-chart {
+    display: grid;
+    gap: 15px;
+}
+
+.template-infographic .skill-bar-item {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
+}
+
+.template-infographic .skill-bar-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.template-infographic .skill-bar-name {
+    font-weight: bold;
+    color: #92400e;
+}
+
+.template-infographic .skill-bar-percent {
+    color: #f59e0b;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.template-infographic .skill-bar-track {
+    height: 8px;
+    background: #fef3c7;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.template-infographic .skill-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+    border-radius: 4px;
+    transition: width 1s ease-in-out;
+}
+
+.template-infographic .timeline-section {
+    margin-bottom: 40px;
+}
+
+.template-infographic .timeline-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #92400e;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.template-infographic .timeline-title::before {
+    content: '📈';
+    font-size: 24px;
+}
+
+.template-infographic .timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.template-infographic .timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #f59e0b, #d97706);
+}
+
+.template-infographic .timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
+    border-left: 4px solid #f59e0b;
+}
+
+.template-infographic .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -37px;
+    top: 25px;
+    width: 12px;
+    height: 12px;
+    background: #f59e0b;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 3px #f59e0b;
+}
+
+.template-infographic .timeline-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.template-infographic .timeline-position {
+    font-weight: bold;
+    color: #92400e;
+    font-size: 16px;
+}
+
+.template-infographic .timeline-company {
+    color: #f59e0b;
+    font-weight: 500;
+}
+
+.template-infographic .timeline-date {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.template-infographic .data-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.template-infographic .data-card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
+    border-top: 4px solid #f59e0b;
+}
+
+.template-infographic .data-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #92400e;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.template-infographic .data-content {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.6;
+}
+
+/* 模板7：创意艺术 - 紫色几何艺术风 */
+.template-artistic .resume-preview {
+    background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.template-artistic .artistic-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 60%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.template-artistic .artistic-header {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+    padding: 50px 40px;
+    text-align: center;
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+}
+
+.template-artistic .artistic-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+.template-artistic .shape {
+    position: absolute;
+    opacity: 0.1;
+}
+
+.template-artistic .shape-1 {
+    top: 10%;
+    left: 10%;
+    width: 60px;
+    height: 60px;
+    background: white;
+    transform: rotate(45deg);
+}
+
+.template-artistic .shape-2 {
+    top: 20%;
+    right: 15%;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+}
+
+.template-artistic .shape-3 {
+    bottom: 20%;
+    left: 20%;
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 43px solid white;
+}
+
+.template-artistic .artistic-avatar {
+    width: 140px;
+    height: 140px;
+    background: rgba(255,255,255,0.2);
+    margin: 0 auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    color: rgba(255,255,255,0.9);
+    border: 4px solid rgba(255,255,255,0.3);
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    position: relative;
+    z-index: 1;
+}
+
+.template-artistic .artistic-name {
+    font-size: 40px;
+    font-weight: bold;
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+}
+
+.template-artistic .artistic-role {
+    font-size: 18px;
+    color: rgba(255,255,255,0.9);
+    margin: 0 0 20px 0;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+}
+
+.template-artistic .artistic-contact {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+}
+
+.template-artistic .artistic-body {
+    padding: 50px 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.template-artistic .creative-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.template-artistic .creative-section {
+    background: rgba(255,255,255,0.8);
+    padding: 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.template-artistic .creative-section::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #8b5cf6, #a855f7, #7c3aed, #8b5cf6);
+    background-size: 400% 400%;
+    border-radius: 22px;
+    z-index: -1;
+    animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.template-artistic .creative-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #7c3aed;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.template-artistic .creative-title::before {
+    content: '🎨';
+    font-size: 24px;
+}
+
+.template-artistic .creative-content {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.7;
+}
+
+.template-artistic .creative-item {
+    margin-bottom: 20px;
+    padding: 20px;
+    background: rgba(139, 92, 246, 0.05);
+    border-radius: 15px;
+    border-left: 4px solid #8b5cf6;
+    position: relative;
+}
+
+.template-artistic .creative-item::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    background: #8b5cf6;
+    border-radius: 50%;
+}
+
+.template-artistic .creative-header-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.template-artistic .creative-position {
+    font-weight: bold;
+    color: #7c3aed;
+    font-size: 16px;
+}
+
+.template-artistic .creative-company {
+    color: #6b7280;
+    font-style: italic;
+}
+
+.template-artistic .creative-date {
+    color: #8b5cf6;
+    font-size: 12px;
+    font-weight: bold;
+    background: rgba(139, 92, 246, 0.1);
+    padding: 4px 8px;
+    border-radius: 10px;
+}
+
+.template-artistic .artistic-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.template-artistic .artistic-skill {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.template-artistic .artistic-skill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s;
+}
+
+.template-artistic .artistic-skill:hover::before {
+    left: 100%;
+}
+
+.template-artistic .full-width {
+    grid-column: 1 / -1;
+}
+
+/* 模板8：商务简约 - 深蓝极简商务风 */
+.template-minimal .resume-preview {
+    background: white;
+    border: 1px solid #e5e7eb;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.template-minimal .minimal-header {
+    background: #1e293b;
+    color: white;
+    padding: 60px 40px;
+    text-align: center;
+}
+
+.template-minimal .minimal-avatar {
+    width: 100px;
+    height: 100px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.3);
+    margin: 0 auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    color: rgba(255,255,255,0.8);
+}
+
+.template-minimal .minimal-name {
+    font-size: 42px;
+    font-weight: 300;
+    margin: 0 0 8px 0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.template-minimal .minimal-role {
+    font-size: 16px;
+    color: rgba(255,255,255,0.8);
+    margin: 0 0 25px 0;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.template-minimal .minimal-contact {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.template-minimal .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.template-minimal .minimal-body {
+    padding: 50px 40px;
+}
+
+.template-minimal .minimal-section {
+    margin-bottom: 45px;
+}
+
+.template-minimal .minimal-title {
+    font-size: 24px;
+    font-weight: 300;
+    color: #1e293b;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.template-minimal .minimal-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 1px;
+    background: #1e293b;
+}
+
+.template-minimal .minimal-content {
+    font-size: 15px;
+    color: #4b5563;
+    line-height: 1.8;
+    font-weight: 300;
+}
+
+.template-minimal .minimal-item {
+    margin-bottom: 30px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.template-minimal .minimal-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.template-minimal .minimal-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.template-minimal .minimal-position {
+    font-size: 18px;
+    font-weight: 400;
+    color: #1e293b;
+    margin: 0 0 4px 0;
+}
+
+.template-minimal .minimal-company {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 300;
+    margin: 0;
+}
+
+.template-minimal .minimal-date {
+    color: #9ca3af;
+    font-size: 13px;
+    font-weight: 300;
+    text-align: right;
+}
+
+.template-minimal .minimal-description {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.7;
+    font-weight: 300;
+    margin-top: 10px;
+}
+
+.template-minimal .minimal-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.template-minimal .minimal-skill {
+    background: transparent;
+    color: #1e293b;
+    border: 1px solid #d1d5db;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.template-minimal .minimal-skill:hover {
+    background: #1e293b;
+    color: white;
+    border-color: #1e293b;
+}
+
+.template-minimal .minimal-summary {
+    background: #f8fafc;
+    padding: 30px;
+    margin: 40px 0;
+    border-left: 4px solid #1e293b;
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #4b5563;
+}
+
+.template-minimal .minimal-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 50px;
+    margin-top: 40px;
+}
+
+.template-minimal .minimal-sidebar {
+    padding-left: 30px;
+    border-left: 1px solid #e5e7eb;
+}
+
+.template-minimal .sidebar-section {
+    margin-bottom: 35px;
+}
+
+.template-minimal .sidebar-title {
+    font-size: 16px;
+    font-weight: 400;
+    color: #1e293b;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.template-minimal .sidebar-content {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+.template-minimal .sidebar-list {
+    list-style: none;
+    padding: 0;
+}
+
+.template-minimal .sidebar-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 14px;
+    color: #4b5563;
+    font-weight: 300;
+}
+
+.template-minimal .sidebar-list li:last-child {
+    border-bottom: none;
+}
+
+/* 通用样式 */
+.placeholder-text {
+    color: #a0aec0;
+    font-style: italic;
+    font-size: 13px;
+}
+
+/* 通用联系方式图标 */
+.contact-item i {
+    width: 16px;
+    text-align: center;
+}
+
+/* 通用技能标签基础样式 */
+.skill-item-base {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 3px 5px 3px 0;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .template-split .resume-preview,
+    .template-colorful .cards-container,
+    .template-infographic .stats-section,
+    .template-artistic .creative-grid,
+    .template-minimal .minimal-grid {
+        flex-direction: column !important;
+        grid-template-columns: 1fr !important;
+    }
+    
+    .template-split .left-column,
+    .template-colorful .info-card,
+    .template-infographic .data-card,
+    .template-artistic .creative-section,
+    .template-minimal .minimal-sidebar {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .resume-preview {
+        max-width: 100% !important;
+        margin: 0 !important;
+    }
+    
+    /* 传统模板响应式 */
+    .template-traditional .resume-header {
+        padding: 20px !important;
+    }
+    
+    .template-traditional .resume-name {
+        font-size: 28px !important;
+    }
+    
+    .template-traditional .resume-contact {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    
+    /* 双栏模板响应式 */
+    .template-split .resume-preview {
+        flex-direction: column !important;
+    }
+    
+    .template-split .left-column {
+        width: 100% !important;
+    }
+    
+    .template-split .profile-section {
+        display: flex !important;
+        align-items: center !important;
+        text-align: left !important;
+        gap: 20px !important;
+    }
+    
+    .template-split .profile-avatar {
+        margin: 0 !important;
+    }
+    
+    /* 彩色卡片响应式 */
+    .template-colorful .cards-container {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    
+    .template-colorful .header-contact {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    
+    /* 科技模板响应式 */
+    .template-tech .tech-header {
+        padding: 30px 20px !important;
+    }
+    
+    .template-tech .tech-name {
+        font-size: 28px !important;
+        letter-spacing: 1px !important;
+    }
+    
+    .template-tech .tech-contact {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+    
+    .template-tech .tech-body {
+        padding: 30px 20px !important;
+    }
+    
+    /* 优雅杂志响应式 */
+    .template-magazine .magazine-columns {
+        grid-template-columns: 1fr !important;
+        gap: 30px !important;
+    }
+    
+    .template-magazine .sidebar-column {
+        border-left: none !important;
+        border-top: 2px solid #f3e8ff !important;
+        padding-left: 0 !important;
+        padding-top: 20px !important;
+    }
+    
+    .template-magazine .magazine-header {
+        padding: 40px 20px !important;
+    }
+    
+    .template-magazine .magazine-name {
+        font-size: 32px !important;
+    }
+    
+    /* 信息图表响应式 */
+    .template-infographic .stats-section {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+    
+    .template-infographic .data-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    
+    .template-infographic .infographic-header {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 20px !important;
+    }
+    
+    /* 创意艺术响应式 */
+    .template-artistic .creative-grid {
+        grid-template-columns: 1fr !important;
+        gap: 25px !important;
+    }
+    
+    .template-artistic .artistic-header {
+        padding: 40px 20px !important;
+        clip-path: none !important;
+    }
+    
+    .template-artistic .artistic-name {
+        font-size: 32px !important;
+    }
+    
+    /* 商务简约响应式 */
+    .template-minimal .minimal-grid {
+        grid-template-columns: 1fr !important;
+        gap: 30px !important;
+    }
+    
+    .template-minimal .minimal-sidebar {
+        border-left: none !important;
+        border-top: 1px solid #e5e7eb !important;
+        padding-left: 0 !important;
+        padding-top: 30px !important;
+    }
+    
+    .template-minimal .minimal-header {
+        padding: 40px 20px !important;
+    }
+    
+    .template-minimal .minimal-name {
+        font-size: 32px !important;
+    }
+    
+    .template-minimal .minimal-contact {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .resume-preview {
+        font-size: 12px !important;
+    }
+    
+    .template-infographic .stats-section {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .template-tech .tech-avatar {
+        width: 80px !important;
+        height: 80px !important;
+        font-size: 30px !important;
+    }
+    
+    .template-magazine .magazine-avatar,
+    .template-artistic .artistic-avatar {
+        width: 100px !important;
+        height: 100px !important;
+        font-size: 35px !important;
+    }
+    
+    .template-minimal .minimal-avatar {
+        width: 80px !important;
+        height: 80px !important;
+        font-size: 28px !important;
+    }
+}
+
+/* 打印样式 */
+@media print {
+    .resume-preview {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        background: white !important;
+    }
+    
+    .template-tech .tech-grid,
+    .template-magazine .magazine-header::before,
+    .template-artistic .artistic-bg,
+    .template-artistic .artistic-shapes {
+        display: none !important;
+    }
+    
+    .template-tech .resume-preview {
+        background: white !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+    }
+    
+    .template-tech .tech-name,
+    .template-tech .tech-title,
+    .template-tech .tech-position {
+        color: #000 !important;
+        text-shadow: none !important;
+    }
+}
