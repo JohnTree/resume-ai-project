@@ -1414,15 +1414,11 @@ function removeEducation(button) {
 // AI优化内容
 async function optimizeContent(type) {
     console.log('开始AI优化，类型:', type);
-    console.log('当前authToken:', authToken);
+    console.log('当前authManager.token:', authManager.token);
     
-    if (!authToken) {
-        console.log('authToken为空，尝试重新注册...');
-        await autoRegister();
-        if (!authToken) {
-            alert('AI服务初始化失败，请刷新页面重试');
-            return;
-        }
+    if (!authManager.token) {
+        alert('请先登录后再使用AI优化功能');
+        return;
     }
     
     let content = '';
@@ -1480,8 +1476,8 @@ async function optimizeContent(type) {
 
 // 优化工作经验
 async function optimizeExperience(button) {
-    if (!authToken) {
-        alert('正在初始化AI服务，请稍后重试...');
+    if (!authManager.token) {
+        alert('请先登录后再使用AI优化功能');
         return;
     }
     
@@ -1498,7 +1494,7 @@ async function optimizeExperience(button) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`
+                'Authorization': `Bearer ${authManager.token}`
             },
             body: JSON.stringify({
                 content: description,
