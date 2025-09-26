@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: resume-ai-backend
+    env: node
+    plan: free
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    envVars:
+      - key: MONGODB_URI
+        value: mongodb+srv://wangshiyang000_db_user:你的密码@cluster0.2uxwl07.mongodb.net/resumeai?retryWrites=true&w=majority
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
