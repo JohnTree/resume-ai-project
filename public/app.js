@@ -11,7 +11,7 @@ window.isProUser = isProUser;
 window.isAdminUser = isAdminUser;
 
 // API基础URL
-const API_BASE = 'http://localhost:3001/api';
+const API_BASE = 'https://resume-ai-project-production.up.railway.app/api';
 
 // Admin账号配置
 const ADMIN_EMAIL = 'admin@resumemaster.com';
