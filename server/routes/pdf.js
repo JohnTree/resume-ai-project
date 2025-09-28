@@ -23,7 +23,7 @@ router.post('/generate-pdf', auth, async (req, res) => {
     // 生成HTML内容
     const htmlContent = generateResumeHTML(resumeData, template);
     
-    // 启动浏览器
+    // 启动Puppeteer
     browser = await puppeteer.launch({
       headless: true,
       args: [
@@ -51,11 +51,13 @@ router.post('/generate-pdf', auth, async (req, res) => {
       printBackground: true,
       margin: {
         top: '20mm',
-        right: '20mm',
+        right: '15mm',
         bottom: '20mm',
-        left: '20mm'
+        left: '15mm'
       }
     });
+    
+    await browser.close();
     
     console.log('PDF生成成功，大小:', pdfBuffer.length, 'bytes');
     
@@ -69,16 +71,15 @@ router.post('/generate-pdf', auth, async (req, res) => {
     res.send(pdfBuffer);
     
   } catch (error) {
+    if (browser) {
+      await browser.close();
+    }
     console.error('PDF生成错误:', error);
     res.status(500).json({ 
       error: 'PDF生成失败',
       message: error.message,
       details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
-  } finally {
-    if (browser) {
-      await browser.close();
-    }
   }
 });
 
@@ -193,63 +194,87 @@ function getTemplateStyles(template) {
         box-sizing: border-box;
     }
     
+    @page {
+        size: A4;
+        margin: 0;
+    }
+    
     body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', 'Helvetica Neue', Arial, sans-serif;
         line-height: 1.6;
         color: #333;
         background: white;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
     
     .resume-container {
-        max-width: 800px;
+        width: 210mm;
+        min-height: 297mm;
         margin: 0 auto;
-        padding: 40px;
+        padding: 20mm 15mm;
+        background: white;
     }
     
     .header {
         text-align: center;
-        margin-bottom: 40px;
-        padding-bottom: 30px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
         border-bottom: 2px solid #e5e7eb;
     }
     
     .name {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         font-weight: 700;
         color: #1e293b;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
+        letter-spacing: 1px;
     }
     
     .contact-info {
         display: flex;
         justify-content: center;
-        gap: 30px;
+        gap: 25px;
         flex-wrap: wrap;
     }
     
     .contact-item {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         color: #64748b;
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
     
     .icon {
-        font-size: 1.1rem;
+        font-size: 1rem;
+        width: 16px;
+        text-align: center;
     }
     
     .section {
-        margin-bottom: 35px;
+        margin-bottom: 28px;
+        page-break-inside: avoid;
     }
     
     .section-title {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         font-weight: 600;
         color: #1e293b;
-        margin-bottom: 20px;
-        padding-bottom: 8px;
+        margin-bottom: 16px;
+        padding-bottom: 6px;
         border-bottom: 1px solid #e5e7eb;
+        position: relative;
+    }
+    
+    .section-title::before {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: currentColor;
     }
     
     .section-content {
@@ -257,64 +282,98 @@ function getTemplateStyles(template) {
     }
     
     .summary {
-        font-size: 1rem;
+        font-size: 0.95rem;
         line-height: 1.7;
         color: #475569;
+        text-align: justify;
     }
     
     .experience-item,
     .education-item {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
+        page-break-inside: avoid;
     }
     
     .item-header {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
+    }
+    
+    .item-left {
+        flex: 1;
+    }
+    
+    .item-right {
+        flex-shrink: 0;
+        margin-left: 20px;
     }
     
     .position,
     .degree {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         font-weight: 600;
         color: #1e293b;
-        margin-bottom: 5px;
+        margin-bottom: 4px;
     }
     
     .company,
     .school {
-        font-size: 1rem;
+        font-size: 0.95rem;
         color: #3b82f6;
         font-weight: 500;
     }
     
     .date {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         color: #64748b;
         white-space: nowrap;
+        background: #f8fafc;
+        padding: 2px 8px;
+        border-radius: 4px;
     }
     
     .description {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         line-height: 1.6;
         color: #475569;
-        margin-top: 8px;
+        margin-top: 6px;
+        text-align: justify;
     }
     
     .skills-list {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px;
     }
     
     .skill-tag {
         background: #eff6ff;
         color: #1d4ed8;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 0.9rem;
+        padding: 4px 12px;
+        border-radius: 16px;
+        font-size: 0.85rem;
         font-weight: 500;
+        border: 1px solid #dbeafe;
+    }
+    
+    /* 打印优化 */
+    @media print {
+        .resume-container {
+            box-shadow: none;
+            margin: 0;
+            padding: 15mm;
+        }
+        
+        .section {
+            page-break-inside: avoid;
+        }
+        
+        .experience-item,
+        .education-item {
+            page-break-inside: avoid;
+        }
     }
   `;
   
@@ -323,9 +382,15 @@ function getTemplateStyles(template) {
     modern: `
       .name {
         color: #3b82f6;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
       .section-title {
         color: #3b82f6;
+      }
+      .header {
         border-bottom-color: #3b82f6;
       }
     `,
@@ -333,12 +398,23 @@ function getTemplateStyles(template) {
       .name {
         color: #8b5cf6;
         font-style: italic;
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
       .section-title {
         color: #8b5cf6;
+      }
+      .header {
         border-bottom-color: #8b5cf6;
       }
       .skill-tag {
+        background: #f3e8ff;
+        color: #7c3aed;
+        border-color: #e9d5ff;
+      }
+      .date {
         background: #f3e8ff;
         color: #7c3aed;
       }
@@ -346,14 +422,26 @@ function getTemplateStyles(template) {
     executive: `
       .name {
         color: #059669;
+        background: linear-gradient(135deg, #059669, #047857);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
       .section-title {
         color: #059669;
-        border-bottom-color: #059669;
         text-transform: uppercase;
         letter-spacing: 1px;
+        font-size: 1.2rem;
+      }
+      .header {
+        border-bottom-color: #059669;
       }
       .skill-tag {
+        background: #ecfdf5;
+        color: #047857;
+        border-color: #d1fae5;
+      }
+      .date {
         background: #ecfdf5;
         color: #047857;
       }
